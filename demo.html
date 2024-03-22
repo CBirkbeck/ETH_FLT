@@ -1,0 +1,934 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>reveal.js – The HTML Presentation Framework</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+		<style>
+		pre code {
+		    font-size: 0.6em; /* Change 80% to whatever width you prefer */
+		}
+		</style>
+		<style>
+		.reveal .slides {
+		    width: 130%; /* Adjust this value as needed */
+		    height: auto; /* Keeps the height adaptable */
+		}
+		</style>
+		<style>
+		/* Custom CSS for theorem and definition */
+		.reveal .theorem, .reveal .definition {
+			margin: 1em 0;
+			padding: 0.5em 1em;
+			border-left: 5px solid #3498db;
+			background-color: #2c3e50; /* Dark grey background */
+			
+		}
+		
+		.reveal .theorem p:first-child, .reveal .definition p:first-child {
+			margin-top: 0;
+		}
+		
+		.reveal .theorem p:last-child, .reveal .definition p:last-child {
+			margin-bottom: 0;
+		}
+		</style>
+
+
+	</head>
+
+	<body>
+
+		<div class="reveal" style="--slide-width: 1080px; --slide-height: 720px; --slide-scale: 1.4;">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			 <div class="slides" style="width: 960px; height: 700px; inset: 50% auto auto 50%; transform: translate(-50%, -50%) scale(1.35909);">
+				<section data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h1>Algebra and Number Theory in Lean</h1>
+					<p>
+						<small>Chris Birkbeck</small>
+					</p>
+					<p>
+						<small>University of East Anglia</small>
+					</p>
+				</section>
+
+				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<textarea data-template>
+						### Tour of the algebra and number theory in mathlib
+						---
+						### Tour of the algebra and number theory in mathlib
+						- The **bad** news is that there isn't enough time to cover everything.
+						---
+						### Tour of the algebra and number theory in mathlib
+						- The **good** news is that there isn't enough time to cover everything (since people have been hard at work adding lots of stuff to mathlib).
+						---
+						The idea for today is to look at some of the algebra and number theory available in mathlib and some demos on how to use it.
+						---
+						### Fermat's Last Theorem
+						- To help organise our thoughts, we'll use Fermat's Last Theorem as a guiding example.
+						---
+						### Fermat's Last Theorem
+						- To help organise our thoughts, we'll use Fermat's Last Theorem as a guiding example.
+						- By looking at the proofs for differing levels of generality, we can see how the algebra and number theory in mathlib can be used.
+						---
+						### Fermat's Last Theorem
+						- To help organise our thoughts, we'll use Fermat's Last Theorem as a guiding example.
+						- By looking at the proofs for differing levels of generality, we can see how the algebra and number theory in mathlib can be used.
+						- Conflict of interest: I'm a number theorist and I've collaborated on a FLT project  in Lean. So lots of other interesting bits of mathlib that I know (even) less about will be left out.
+						---
+						### Fermat's Last Theorem
+						<div class="definition">
+							<strong>Theorem</strong>: 
+							Let $x,y,z,n \in \mathbb{N}$ and $n \geq 3$. Then $$x^n + y^n = z^n$$ has no solutions with $xyz \neq 0$. 
+							</div>
+						---
+						### Cases of Fermat's Last Theorem
+						- $n = 3$ (done in Lean by Ruben Van de Velde)
+						- $n=p$ is a **regular prime** (i.e. $p$ does not divide the class number of the $p$-th cyclotomic field)
+						- Some thoughts on the general case, to see how much is still missing from mathlib.
+					</textarea>
+				</section>
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>Fermat's Last Theorem in Lean </h4>
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-3|5-6|8-10">
+						/-- Statement of Fermat's Last Theorem over a given semiring with a specific exponent. -/
+						def FermatLastTheoremWith (α : Type*) [Semiring α] (n : ℕ) : Prop :=
+						∀ a b c : α, a ≠ 0 → b ≠ 0 → c ≠ 0 → a ^ n + b ^ n ≠ c ^ n
+
+						/-- Statement of Fermat's Last Theorem over the naturals for a given exponent. -/
+						def FermatLastTheoremFor (n : ℕ) : Prop := FermatLastTheoremWith ℕ n
+
+						/-- Statement of Fermat's Last Theorem: `a ^ n + b ^ n = c ^ n` has no nontrivial natural solution
+						when `n ≥ 3`. -/
+						def FermatLastTheorem : Prop := ∀ n ≥ 3, FermatLastTheoremFor n
+					</code></pre>
+				</section>
+				<section   data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h2>Algebra</h2>
+					<p>The first thing we see is that it mentions a semiring, what is this in lean? </p>
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-4|6-9" >
+						/-- A `Semiring` is a type with addition, multiplication, a `0` and a `1` where addition is
+							commutative and associative, multiplication is associative and left and right distributive over
+							addition, and `0` and `1` are additive and multiplicative identities. -/
+						class Semiring (α : Type u) extends NonUnitalSemiring α, NonAssocSemiring α, MonoidWithZero α	
+						
+						/--For contex, this is what a ring is:-/
+
+						/-- A `Ring` is a `Semiring` with negation making it an additive group. -/
+						class Ring (R : Type u) extends Semiring R, AddCommGroup R, AddGroupWithOne R
+					</code></pre>
+				</section>
+
+				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<textarea data-template>
+						### Algebraic structures in Lean
+						- They are built from simpler ones by using **extends**
+						---
+						### Algebraic structures in Lean
+						- They are built from simpler ones by using **extends**
+						- If we keep going down the rabbit hole, we see **monoids**, **semigroups** and finally down to binary operations (`Mul`).
+						---
+						### Algebraic structures in Lean
+						- The same is true for Groups, Rings, Fields, Algebras, etc.
+					</textarea>	
+				</section>
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>Cheat Sheet </h4>
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1|3-4|6-7|9-10|12-13">
+						variable {G R F : Type*} [Group G] [Ring R] [Field F] 
+
+						lemma mylem (H : Subgroup G) : 1 ∈ H := by 
+  							exact Subgroup.one_mem H
+
+						theorem mythm {K R : Type*} [Field K] [Semiring R] [Algebra K R] : R = R := rfl
+						-- if I didn't say `Semiring R` then it would complain as the algebra instance requires this.
+
+						theorem mythm2 {R : Type*} [CommRing R] (r : R) : 
+								Ideal.span ({r} : Set R) = Ideal.span ({r + 0} : Set R) := by rw [add_zero]
+
+						--It can infer that somethings are Rings
+						lemma int_lemma (a b : ℤ) : a^2 + b = b + a^2 := by ring
+					</code></pre>
+				</section>
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>FLT for n=3 </h4>
+					<p>Here is the easy step in this proof, which involves reducing modulo 9</p>
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-3|5-8|10-19">
+						private lemma cube_of_castHom_ne_zero {n : ZMod 9} :
+								castHom (show 3 ∣ 9 by norm_num) (ZMod 3) n ≠ 0 → n ^ 3 = 1 ∨ n ^ 3 = 8 := by
+							fin_cases n <;> decide
+
+						private lemma cube_of_not_dvd {n : ℕ} (h : ¬ 3 ∣ n) :
+								(n : ZMod 9) ^ 3 = 1 ∨ (n : ZMod 9) ^ 3 = 8 := by  --what are the cubes mod 9
+							apply cube_of_castHom_ne_zero
+							rwa [map_natCast, Ne, Fin.nat_cast_eq_zero]
+
+						/--If `a b c : ℕ` are such that `¬ 3 ∣ a * b * c`, then `a ^ 3 + b ^ 3 ≠ c ^ 3`. -/
+						theorem fermatLastTheoremThree_case_1 {a b c : ℕ} (hdvd : ¬ 3 ∣ a * b * c) :
+								a ^ 3 + b ^ 3 ≠ c ^ 3 := by
+							simp_rw [Nat.prime_three.dvd_mul, not_or] at hdvd
+							apply mt (congrArg (Nat.cast : ℕ → ZMod 9)) -- turn this into a mod 9 check
+							simp_rw [Nat.cast_add, Nat.cast_pow] --deal with coercions 
+							rcases cube_of_not_dvd hdvd.1.1 with ha | ha <;> --split into cases
+							rcases cube_of_not_dvd hdvd.1.2 with hb | hb <;>
+							rcases cube_of_not_dvd hdvd.2 with hc | hc <;>
+							rw [ha, hb, hc] <;> decide --case bash 
+					</code></pre>
+				</section>
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>FLT for n=3 </h4>
+					<p>Here is a nice example of a ring homomorphism</p>
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-2|4-8">
+						def castHom (h : m ∣ n) (R : Type*) [Ring R] [CharP R m] : ZMod n →+* R where 
+						-- `→+*` denotes a ring homomorphism
+
+							toFun := cast  --whats the map, in this case its just pick a representative
+							map_zero' := cast_zero --make sure it sends 0 to 0
+							map_one' := cast_one h --make sure it sends 1 to 1
+							map_add' := cast_add h -- make sure it preserves addition
+							map_mul' := cast_mul h -- make sure it preserves multiplication
+					</code></pre>
+				</section>
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>FLT for n=3 </h4>
+					<ul>
+						<li>The full result in this case, has been done by Ruben, but it's not yet in mathlib.</li>
+						<li>One of the projects is to do this (doing it in a slightly different way to what Ruben did)</li>
+					</ul>
+				</section>
+				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<textarea data-template>
+						### FLT for regular primes
+						- Next lets look at the next case, which is for regular primes.
+						<div class="definition">
+							<strong>Definition</strong>: 
+							A prime $p$ is regular if $p$ does not divide the class number of $\mathbb{Q}(\zeta_p)$.
+							</div>
+						
+						
+						- (First **non**-example is $p=37$)
+						
+						---
+						### FLT for regular primes
+						- Clearly this is a bit more involved, requiring cyclotomic fields and class numbers.
+						---
+						### FLT for regular primes
+						**Proof Idea**: 
+						- Factor in $\mathbb{Q}(\zeta_p)$ to get $$x^p+y^p=\prod_{i=0}^{p-1} (x+\zeta_p^i y)$$
+						---
+						### FLT for regular primes
+						**Proof Idea**: 
+						- Factor in $\mathbb{Q}(\zeta_p)$ to get $$x^p+y^p=\prod_{i=0}^{p-1} (x+\zeta_p^i y)$$
+						- Turn this into a questions about ideals in $\mathbb{Z}[\zeta_p]$ (the ring of integers of $\mathbb{Q}(\zeta_p)$)
+						---
+						### FLT for regular primes
+						**Proof Idea**:
+						- Use the class number condition to get a contradiction.
+					</textarea>	
+				</section>
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>Number fields </h4>
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-5|6-11|13-15" >
+						/-- A number field is a field which has characteristic zero and is finite
+						dimensional over ℚ. -/
+						class NumberField (K : Type*) [Field K] : Prop where
+						[to_charZero : CharZero K]
+						[to_finiteDimensional : FiniteDimensional ℚ K]
+
+						-- examples
+						variable {K : Type*} [Field K] [CharZero K] [IsCyclotomicExtension {3} ℚ K]
+
+						instance : NumberField K := IsCyclotomicExtension.numberField {3} ℚ K
+						-- this is an abstract cyclotomic extension 
+
+						variable (p : ℕ+)
+						--here is a concrete cyclotomic extension (i.e. the splitting field of p-th cyclotomic polynomial)
+						instance : IsGalois ℚ (CyclotomicField p ℚ) := IsCyclotomicExtension.isGalois p _ _
+					</code></pre>
+				</section>
+
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>Rings of integers </h4>
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-5|7-8|10-13|15-17" >
+						/-- The ring of integers (or number ring) corresponding to a number field
+						is the integral closure of ℤ in the number field. -/
+						def ringOfIntegers :=
+							integralClosure ℤ K --here K is a number field
+						-- if you `open NumberField` then you can write 𝓞 K for the ring of integers of K	
+
+						theorem isIntegralClosure_adjoin_singleton_of_prime [hcycl : IsCyclotomicExtension {p} ℚ K]
+							(hζ : IsPrimitiveRoot ζ ↑p) : IsIntegralClosure (adjoin ℤ ({ζ} : Set K)) ℤ K :=	by ...	
+						
+						noncomputable def _root_.IsPrimitiveRoot.adjoinEquivRingOfIntegers [IsCyclotomicExtension {p^k} ℚ K] 
+						(hζ : IsPrimitiveRoot ζ ↑(p ^ k)) :
+							adjoin ℤ ({ζ} : Set K) ≃ₐ[ℤ] 𝓞 K :=
+						-- here ≃ₐ[ℤ] means it's a ℤ-algebra isomorphism.
+
+						/-- A natural number `n` is regular if `n` is coprime with the cardinal of the class group -/
+						def IsRegularNumber [hn : Fact (0 < n)] : Prop :=
+						n.Coprime <| Fintype.card <| ClassGroup (𝓞 <| CyclotomicField ⟨n, hn.out⟩ ℚ)
+					</code></pre>
+				</section>
+			
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>Ideals in FLT </h4>
+					<p>Next lets look at one of the key ideas for the regular case of FLT, which is to turn it into a question about ideals.</p>
+				</section>
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>Ideals in FLT </h4>
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-3" >
+						def fltIdeals (x y : ℤ) (n : ℕ) {η : R} (_ : η ∈ nthRootsFinset n (𝓞 K)) : Ideal (𝓞 K) :=
+  							Ideal.span ({x + η * y} : Set (𝓞 K))  
+						-- here `nthRootsFinset n 𝓞 K` is the set of nth roots of unity in (𝓞 K)	
+					</code></pre>
+				</section>
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>Ideals in FLT </h4>
+					<p>The result you want to then prove is that these ideals are coprime (for different choices of root of unity and coprime x,y)</p>
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-5" >
+						theorem fltIdeals_IsCoprime [Fact (p : ℕ).Prime] (ph : 3 ≤ p) {x y : ℤ} {η₁ η₂ : R}
+							(hη₁ : η₁ ∈ nthRootsFinset p (𝓞 K))(hη₂ : η₂ ∈ nthRootsFinset p (𝓞 K)) 
+							(hdiff : η₁ ≠ η₂) (hp : IsCoprime x y) (hp2 : ¬(p : ℤ) ∣ (x + y : ℤ)) 
+							(hwlog : η₁ ≠ 1) : IsCoprime (fltIdeals p x y hη₁) (fltIdeals p x y hη₂) := by ...
+					</code></pre>
+				</section>
+
+				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<textarea data-template>
+						### FLT for regular primes
+						- To finish off the proof actually requires lots of other things:
+						- Hilbert 90-94
+						- Dirichlet's unit theorem
+						- The relative different ideal (and general ramification resutls)
+						---
+						### FLT in general
+						- As we get closer to current research, things get more complicated. 
+						---
+						### FLT in general
+						- As we get closer to current research, things get more complicated. 
+						- For example, the proof of full FLT one needs to turn this algebraic question into an analytic one.
+						---
+						### FLT in general
+						- As we get closer to current research, things get more complicated. 
+						- For example, the proof of full FLT one needs to turn this algebraic question into an analytic one.
+						- The key is the modularity theorem. 
+						---
+						### FLT in general
+						To even state this, we want:
+						- Elliptic curves
+						- Modular forms
+						---
+						### FLT in general
+						Lets very quickly look at how these work in mathlib and then I'll mention things that we don't have yet.
+						---
+						# Elliptic Curves 
+						Roughly, these are geometric objects defined by solutiuons to cubic equations of the form 
+						$$y^2 = x^3 + ax + b$$
+						---
+						# Elliptic Curves 
+						Roughly, these are geometric objects defined by solutiuons to cubic equations of the form 
+						$$y^2 + a_1xy  + a_2y = x^3 + a_2 x^2 + a_4x + a_6$$
+						(you also want the discrimant of this cubic to be non-zero)
+						
+		
+					</textarea>	
+				</section>
+
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>Elliptic curves </h4>
+					<p>This is what Copilot thinks it should be</p>
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-5" >
+						/-- An elliptic curve over a field `K` is a non-singular cubic curve in
+						`projective_space` given by an equation `y^2 = x^3 + a * x + b` -/
+						class EllipticCurve (K : Type*) [Field K] where
+						(a b : K)
+						(discr_ne_zero : 4 * a^3 + 27 * b^2 ≠ 0)  
+					</code></pre>
+				</section>
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>Elliptic curves </h4>
+					<p>This is basically what it is in mathlib</p>
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-3|5-9" >
+						structure EllipticCurve (R : Type u) [CommRing R] extends WeierstrassCurve R where
+							Δ' : Rˣ
+							coe_Δ' : Δ' = toWeierstrassCurve.Δ
+						
+						--where Δ is then some horrible expression in terms of the coefficients of the curve
+						/-- A Weierstrass curve $Y^2 + a_1XY + a_3Y = X^3 + a_2X^2 + a_4X + a_6$ with parameters $a_i$. -/
+							@[ext]
+							structure WeierstrassCurve (R : Type u) where
+							  (a₁ a₂ a₃ a₄ a₆ : R) 
+					</code></pre>
+				</section>
+
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>Elliptic curves </h4>
+					<p>We know non-trivial things about elliptic curves in mathlib, such as:</p>
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-4" >
+						variables  (E : EllipticCurve ℚ)
+
+						example (P Q R : E.toAffine.Point) : P + (Q + R) = P + Q + R := by 
+							exact (WeierstrassCurve.Affine.Point.add_assoc P Q R).symm
+					</code></pre>
+				</section>
+
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>Modular forms </h4>
+					<p>These are holomorphic functions \(f : \mathbb{H} \to \mathbb{C}, \) with some bounded coundition at infinity such that for some fixed \(k \in \mathbb{Z}\) and \(\Gamma \in \mathrm{SL}_2(\mathbb{Z}) \) we have
+					\[\forall \left ( \begin{smallmatrix} a & b \\ c & d \end{smallmatrix} \right)  \in \Gamma, \qquad f \left(\frac{az+b}{cz+d} \right) = (cz+d)^k f(z)  \]	
+					</p>
+					
+				</section>
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>Modular forms </h4>
+					<p>Here it is in mathlib</p>
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-3|5-8" >
+						structure ModularForm extends SlashInvariantForm Γ k where
+							holo' : MDifferentiable 𝓘(ℂ) 𝓘(ℂ) (toSlashInvariantForm : ℍ → ℂ)
+							bdd_at_infty' : ∀ A : SL(2, ℤ), IsBoundedAtImInfty (toSlashInvariantForm ∣[k] A)
+
+						structure SlashInvariantForm where
+							toFun : ℍ → ℂ
+							slash_action_eq' : ∀ γ : Γ, toFun ∣[k] γ = toFun
+					</code></pre>
+					<p>We do have enough to state a version on the modularity conjecture, but we are still far for from proving it.</p>
+				</section>
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>Algebra and Number theory in mathlib</h4>
+					<p>Going back to our original goal, we see that:</p>
+					<ul>
+						<li>We can do lots of basic algebra and number theory</li>
+						<li>We have some more advanced things, like elliptic curves and modular forms</li>
+					</ul>
+				</section>	
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>Algebra and Number theory in mathlib</h4>
+					<p>I really have missed out lots of things, for example:</p>
+					<ul>
+						<li>Category theory</li>
+						<li>Homological algebra</li>
+						<li>Lie Algebras</li>
+						<li>Riemann Zeta function, L-series</li>
+						<li>Quadratic reciprocity, Bernoulli numbers, Pell's equation</li>
+					</ul>
+				</section>	
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>Algebra and Number theory in mathlib</h4>
+					<p>We are also still missing lots of things! For example, for full FLT, we need:
+					<ul>
+						<li>More ring theory: Gorenstein rings</li>
+						<li>More modular form results: Hecke algebras*</li>
+						<li>Representation theory: (p-adic) Cyclotomic characters*</li>
+						<li> Lie algebra cohomology</li>
+					</ul>
+					<hr/>
+  					<div style="text-align: left; font-size: 0.5em">* means I know some people as thinking about this, ask on Zulip if interested.</div>
+					
+				</section>
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>Algebra and Number theory in mathlib</h4>
+					<ul>
+						<li>Tate curves</li>
+						<li>Chebotarev's density theorem*</li>
+						<li>Local and global class field theory*</li>
+						<li> Results about Finite flat group schemes</li>
+						<li>Galois representations</li>
+					</ul>
+					
+				</section>
+
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h2>Thank you!</h2>
+					
+				</section>
+
+				<section data-auto-animate >
+					<h4>Groups</h4>
+					<p>Fist of all lets look at how groups are defined in mathlib.</p>
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch">
+							class Group (G : Type u) extends DivInvMonoid G where
+								protected mul_left_inv : ∀ a : G, a⁻¹ * a = 1
+					</code></pre>
+					<p>In words, a Group is a Monoid with an operation ⁻¹ satisfying $a^{-1} \cdot a = 1$</p>
+				</section>
+				<section data-auto-animate >
+					<h4>Groups, Rings, Fields</h4>
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch">
+							variable (G R F: Type*) [Group G] [Ring R] [Field F]
+					</code></pre>
+				</section>
+				<section>
+					<h2>Export to PDF</h2>
+					<iframe data-src="https://lean-graph.com/" width="600" height="400" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:3px solid #666; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe>
+				</section>
+
+				<section>
+					<h3>Tour of the algebra and number theory (in mathlib)</h3>
+					<p>
+						The **good** news is that there isn't enough time to cover everything.
+					</p>
+				</section>
+
+				<!-- Example of nested vertical slides -->
+				<section>
+					<section>
+						<h2>Vertical Slides</h2>
+						<p>Slides can be nested inside of each other.</p>
+						<p>Use the <em>Space</em> key to navigate through all slides.</p>
+						<br>
+						<a href="#/2/1" class="navigate-down">
+							<img class="r-frame" style="background: rgba(255,255,255,0.1);" width="178" height="238" data-src="https://static.slid.es/reveal/arrow.png" alt="Down arrow">
+						</a>
+					</section>
+					<section>
+						<h2>Basement Level 1</h2>
+						<p>Nested slides are useful for adding additional detail underneath a high level horizontal slide.</p>
+					</section>
+					<section>
+						<h2>Basement Level 2</h2>
+						<p>That's it, time to go back up.</p>
+						<br>
+						<a href="#/2">
+							<img class="r-frame" style="background: rgba(255,255,255,0.1); transform: rotate(180deg);" width="178" height="238" data-src="https://static.slid.es/reveal/arrow.png" alt="Up arrow">
+						</a>
+					</section>
+				</section>
+
+				<section>
+					<h2>Slides</h2>
+					<p>
+						Not a coder? Not a problem. There's a fully-featured visual editor for authoring these, try it out at <a href="https://slides.com" target="_blank">https://slides.com</a>.
+					</p>
+				</section>
+
+				<section data-visibility="hidden">
+					<h2>Hidden Slides</h2>
+					<p>
+						This slide is visible in the source, but hidden when the presentation is viewed. You can show all hidden slides by setting the `showHiddenSlides` config option to `true`.
+					</p>
+				</section>
+
+				<section data-auto-animate>
+					<h2 data-id="code-title">Pretty Code</h2>
+					<pre data-id="code-animation"><code data-trim data-line-numbers="1-2" data-noescape="" class="language-lean hljs" class="stretch">
+						def coherentCoverage [Precoherent C] : Coverage C where
+  							covering B := { S | ∃ (α : Type) (_ : Finite α) (X : α → C) (π : (a : α) → (X a ⟶ B)),
+    							S = Presieve.ofArrows X π ∧ EffectiveEpiFamily X π }
+  							pullback := by
+					</code></pre>
+					<p>Code syntax highlighting courtesy of <a href="https://highlightjs.org/usage/">highlight.js</a>.</p>
+				</section>
+
+				<section data-auto-animate2>
+					<h2 data-id="code-title">Pretty Code</h2>
+					<pre style="display: table" class="code-wrapper"><code data-trim="" data-noescape="" class="language-lean hljs"><span class="hljs-theorem"><span class="hljs-keyword">structure</span> <span class="hljs-title">point</span> <span class="hljs-symbol">:=</span></span> (x y : ℤ)
+
+<span class="hljs-comment">-- fails in Lean 3, succeeds in Lean 4</span>
+<span class="hljs-keyword">example</span> (p : point) : p = { x <span class="hljs-symbol">:=</span> p.x, y <span class="hljs-symbol">:=</span> p.y } <span class="hljs-symbol">:=</span> <span class="hljs-built_in">rfl</span>
+<span class="hljs-keyword">example</span> (p : point) : p = point.mk p.x p.y <span class="hljs-symbol">:=</span> <span class="hljs-built_in">rfl</span></code></pre>
+
+					<p>Code syntax highlighting courtesy of <a href="https://highlightjs.org/usage/">highlight.js</a>.</p>
+				</section>
+
+				<section data-auto-animate>
+					<h2 data-id="code-title">With Animations</h2>
+					<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers="|4,8-11|17|22-24"><script type="text/template">
+						import React, { useState } from 'react';
+
+						function Example() {
+						  const [count, setCount] = useState(0);
+
+						  return (
+						    <div>
+						      <p>You clicked {count} times</p>
+						      <button onClick={() => setCount(count + 1)}>
+						        Click me
+						      </button>
+						    </div>
+						  );
+						}
+
+						function SecondExample() {
+						  const [count, setCount] = useState(0);
+
+						  return (
+						    <div>
+						      <p>You clicked {count} times</p>
+						      <button onClick={() => setCount(count + 1)}>
+						        Click me
+						      </button>
+						    </div>
+						  );
+						}
+					</script></code></pre>
+				</section>
+
+				<section>
+					<h2>Point of View</h2>
+					<p>
+						Press <strong>ESC</strong> to enter the slide overview.
+					</p>
+					<p>
+						Hold down the <strong>alt</strong> key (<strong>ctrl</strong> in Linux) and click on any element to zoom towards it using <a href="http://lab.hakim.se/zoom-js">zoom.js</a>. Click again to zoom back out.
+					</p>
+					<p>
+						(NOTE: Use ctrl + click in Linux.)
+					</p>
+				</section>
+
+				<section data-auto-animate data-auto-animate-easing="cubic-bezier(0.770, 0.000, 0.175, 1.000)">
+					<h2>Auto-Animate</h2>
+					<p>Automatically animate matching elements across slides with <a href="https://revealjs.com/auto-animate/">Auto-Animate</a>.</p>
+					<div class="r-hstack justify-center">
+						<div data-id="box1" style="background: #999; width: 50px; height: 50px; margin: 10px; border-radius: 5px;"></div>
+						<div data-id="box2" style="background: #999; width: 50px; height: 50px; margin: 10px; border-radius: 5px;"></div>
+						<div data-id="box3" style="background: #999; width: 50px; height: 50px; margin: 10px; border-radius: 5px;"></div>
+					</div>
+				</section>
+				<section data-auto-animate data-auto-animate-easing="cubic-bezier(0.770, 0.000, 0.175, 1.000)">
+					<div class="r-hstack justify-center">
+						<div data-id="box1" data-auto-animate-delay="0" style="background: cyan; width: 150px; height: 100px; margin: 10px;"></div>
+						<div data-id="box2" data-auto-animate-delay="0.1" style="background: magenta; width: 150px; height: 100px; margin: 10px;"></div>
+						<div data-id="box3" data-auto-animate-delay="0.2" style="background: yellow; width: 150px; height: 100px; margin: 10px;"></div>
+					</div>
+					<h2 style="margin-top: 20px;">Auto-Animate</h2>
+				</section>
+				<section data-auto-animate data-auto-animate-easing="cubic-bezier(0.770, 0.000, 0.175, 1.000)">
+					<div class="r-stack">
+						<div data-id="box1" style="background: cyan; width: 300px; height: 300px; border-radius: 200px;"></div>
+						<div data-id="box2" style="background: magenta; width: 200px; height: 200px; border-radius: 200px;"></div>
+						<div data-id="box3" style="background: yellow; width: 100px; height: 100px; border-radius: 200px;"></div>
+					</div>
+					<h2 style="margin-top: 20px;">Auto-Animate</h2>
+				</section>
+
+				<section>
+					<h2>Touch Optimized</h2>
+					<p>
+						Presentations look great on touch devices, like mobile phones and tablets. Simply swipe through your slides.
+					</p>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						## Markdown Support
+
+						Write content using inline or external Markdown.
+						Instructions and more info available in the [docs](https://revealjs.com/markdown/).
+
+						```html []
+						<section data-markdown>
+						  ## Markdown Support
+
+						  Write content using inline or external Markdown.
+						  Instructions and more info available in the [docs](https://revealjs.com/markdown/).
+						</section>
+						```
+					</script>
+				</section>
+
+				<section>
+					<p>Add the <code>r-fit-text</code> class to auto-size text</p>
+					<h2 class="r-fit-text">FIT TEXT</h2>
+				</section>
+
+				<section>
+					<section id="fragments">
+						<h2>Fragments</h2>
+						<p>Hit the next arrow...</p>
+						<p class="fragment">... to step through ...</p>
+						<p><span class="fragment">... a</span> <span class="fragment">fragmented</span> <span class="fragment">slide.</span></p>
+
+						<aside class="notes">
+							This slide has fragments which are also stepped through in the notes window.
+						</aside>
+					</section>
+					<section>
+						<h2>Fragment Styles</h2>
+						<p>There's different types of fragments, like:</p>
+						<p class="fragment grow">grow</p>
+						<p class="fragment shrink">shrink</p>
+						<p class="fragment fade-out">fade-out</p>
+						<p>
+							<span style="display: inline-block;" class="fragment fade-right">fade-right, </span>
+							<span style="display: inline-block;" class="fragment fade-up">up, </span>
+							<span style="display: inline-block;" class="fragment fade-down">down, </span>
+							<span style="display: inline-block;" class="fragment fade-left">left</span>
+						</p>
+						<p class="fragment fade-in-then-out">fade-in-then-out</p>
+						<p class="fragment fade-in-then-semi-out">fade-in-then-semi-out</p>
+						<p>Highlight <span class="fragment highlight-red">red</span> <span class="fragment highlight-blue">blue</span> <span class="fragment highlight-green">green</span></p>
+					</section>
+				</section>
+
+				<section id="transitions">
+					<h2>Transition Styles</h2>
+					<p>
+						You can select from different transitions, like: <br>
+						<a href="?transition=none#/transitions">None</a> -
+						<a href="?transition=fade#/transitions">Fade</a> -
+						<a href="?transition=slide#/transitions">Slide</a> -
+						<a href="?transition=convex#/transitions">Convex</a> -
+						<a href="?transition=concave#/transitions">Concave</a> -
+						<a href="?transition=zoom#/transitions">Zoom</a>
+					</p>
+				</section>
+
+				<section id="themes">
+					<h2>Themes</h2>
+					<p>
+						reveal.js comes with a few themes built in: <br>
+						<!-- Hacks to swap themes after the page has loaded. Not flexible and only intended for the reveal.js demo deck. -->
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/black.css'); return false;">Black (default)</a> -
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/white.css'); return false;">White</a> -
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/league.css'); return false;">League</a> -
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/sky.css'); return false;">Sky</a> -
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/beige.css'); return false;">Beige</a> -
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/simple.css'); return false;">Simple</a> <br>
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/serif.css'); return false;">Serif</a> -
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/blood.css'); return false;">Blood</a> -
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/night.css'); return false;">Night</a> -
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/moon.css'); return false;">Moon</a> -
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/solarized.css'); return false;">Solarized</a>
+					</p>
+				</section>
+
+				<section>
+					<section data-background="#dddddd">
+						<h2>Slide Backgrounds</h2>
+						<p>
+							Set <code>data-background="#dddddd"</code> on a slide to change the background color. All CSS color formats are supported.
+						</p>
+						<a href="#" class="navigate-down">
+							<img class="r-frame" style="background: rgba(255,255,255,0.1);" width="178" height="238" data-src="https://static.slid.es/reveal/arrow.png" alt="Down arrow">
+						</a>
+					</section>
+					<section data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+						<h2>Gradient Backgrounds</h2>
+						<pre><code class="hljs html wrap">&lt;section data-background-gradient=
+							"linear-gradient(to bottom, #ddd, #191919)"&gt;</code></pre>
+					</section>
+					<section data-background="https://static.slid.es/reveal/image-placeholder.png">
+						<h2>Image Backgrounds</h2>
+						<pre><code class="hljs html">&lt;section data-background="image.png"&gt;</code></pre>
+					</section>
+					<section data-background="https://static.slid.es/reveal/image-placeholder.png" data-background-repeat="repeat" data-background-size="100px">
+						<h2>Tiled Backgrounds</h2>
+						<pre><code class="hljs html" style="word-wrap: break-word;">&lt;section data-background="image.png" data-background-repeat="repeat" data-background-size="100px"&gt;</code></pre>
+					</section>
+					<section data-background-video="https://static.slid.es/site/homepage/v1/homepage-video-editor.mp4" data-background-color="#000000">
+						<div style="background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px;">
+							<h2>Video Backgrounds</h2>
+							<pre><code class="hljs html" style="word-wrap: break-word;">&lt;section data-background-video="video.mp4,video.webm"&gt;</code></pre>
+						</div>
+					</section>
+					<section data-background="http://i.giphy.com/90F8aUepslB84.gif">
+						<h2>... and GIFs!</h2>
+					</section>
+				</section>
+
+				<section data-transition="slide" data-background="#4d7e65" data-background-transition="zoom">
+					<h2>Background Transitions</h2>
+					<p>
+						Different background transitions are available via the backgroundTransition option. This one's called "zoom".
+					</p>
+					<pre><code class="hljs javascript">Reveal.configure({ backgroundTransition: 'zoom' })</code></pre>
+				</section>
+
+				<section data-transition="slide" data-background="#b5533c" data-background-transition="zoom">
+					<h2>Background Transitions</h2>
+					<p>
+						You can override background transitions per-slide.
+					</p>
+					<pre><code class="hljs html" style="word-wrap: break-word;">&lt;section data-background-transition="zoom"&gt;</code></pre>
+				</section>
+
+				<section data-background-iframe="https://hakim.se" data-background-interactive>
+					<div style="position: absolute; width: 40%; right: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px; font-size: 20px; text-align: left;">
+						<h2>Iframe Backgrounds</h2>
+						<p>Since reveal.js runs on the web, you can easily embed other web content. Try interacting with the page in the background.</p>
+					</div>
+				</section>
+
+				<section>
+					<h2>Marvelous List</h2>
+					<ul>
+						<li>No order here</li>
+						<li>Or here</li>
+						<li>Or here</li>
+						<li>Or here</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Fantastic Ordered List</h2>
+					<ol>
+						<li>One is smaller than...</li>
+						<li>Two is smaller than...</li>
+						<li>Three!</li>
+					</ol>
+				</section>
+
+				<section>
+					<h2>Tabular Tables</h2>
+					<table>
+						<thead>
+							<tr>
+								<th>Item</th>
+								<th>Value</th>
+								<th>Quantity</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Apples</td>
+								<td>$1</td>
+								<td>7</td>
+							</tr>
+							<tr>
+								<td>Lemonade</td>
+								<td>$2</td>
+								<td>18</td>
+							</tr>
+							<tr>
+								<td>Bread</td>
+								<td>$3</td>
+								<td>2</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<section>
+					<h2>Clever Quotes</h2>
+					<p>
+						These guys come in two forms, inline: <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">The nice thing about standards is that there are so many to choose from</q> and block:
+					</p>
+					<blockquote cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
+						&ldquo;For years there has been a theory that millions of monkeys typing at random on millions of typewriters would
+						reproduce the entire works of Shakespeare. The Internet has proven this theory to be untrue.&rdquo;
+					</blockquote>
+				</section>
+
+				<section>
+					<h2>Intergalactic Interconnections</h2>
+					<p>
+						You can link between slides internally,
+						<a href="#/2/3">like this</a>.
+					</p>
+				</section>
+
+				<section>
+					<h2>Speaker View</h2>
+					<p>There's a <a href="https://revealjs.com/speaker-view/">speaker view</a>. It includes a timer, preview of the upcoming slide as well as your speaker notes.</p>
+					<p>Press the <em>S</em> key to try it out.</p>
+
+					<aside class="notes">
+						Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit 's' on your keyboard).
+					</aside>
+				</section>
+
+				<section>
+					<h2>Export to PDF</h2>
+					<p>Presentations can be <a href="https://revealjs.com/pdf-export/">exported to PDF</a>, here's an example:</p>
+					<iframe data-src="https://www.slideshare.net/slideshow/embed_code/42840540" width="445" height="355" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:3px solid #666; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe>
+				</section>
+
+				<section>
+					<h2>Global State</h2>
+					<p>
+						Set <code>data-state="something"</code> on a slide and <code>"something"</code>
+						will be added as a class to the document element when the slide is open. This lets you
+						apply broader style changes, like switching the page background.
+					</p>
+				</section>
+
+				<section data-state="customevent">
+					<h2>State Events</h2>
+					<p>
+						Additionally custom events can be triggered on a per slide basis by binding to the <code>data-state</code> name.
+					</p>
+					<pre><code class="javascript" data-trim contenteditable style="font-size: 18px;">
+Reveal.on( 'customevent', function() {
+	console.log( '"customevent" has fired' );
+} );
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Take a Moment</h2>
+					<p>
+						Press B or . on your keyboard to pause the presentation. This is helpful when you're on stage and want to take distracting slides off the screen.
+					</p>
+				</section>
+
+				<section>
+					<h2>Much more</h2>
+					<ul>
+						<li>Right-to-left support</li>
+						<li><a href="https://revealjs.com/api/">Extensive JavaScript API</a></li>
+						<li><a href="https://revealjs.com/auto-slide/">Auto-progression</a></li>
+						<li><a href="https://revealjs.com/backgrounds/#parallax-background">Parallax backgrounds</a></li>
+						<li><a href="https://revealjs.com/keyboard/">Custom keyboard bindings</a></li>
+					</ul>
+				</section>
+
+				<section style="text-align: left;">
+					<h1>THE END</h1>
+					<p>
+						- <a href="https://slides.com">Try the online editor</a> <br>
+						- <a href="https://github.com/hakimel/reveal.js">Source code &amp; documentation</a>
+					</p>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/zoom/zoom.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/search/search.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/highlight/lean.min.js"></script>
+  	<script src="plugin/highlight/lean-goal.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script>
+
+
+
+			// Also available as an ES module, see:
+			// https://revealjs.com/initialization/
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				center: true,
+				hash: true,
+				margin: -0.1,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight, RevealMath.KaTeX ]
+			});
+
+		</script>
+
+	</body>
+</html>
