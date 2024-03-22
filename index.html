@@ -49,6 +49,15 @@
 			margin-bottom: 0;
 		}
 		</style>
+		<script>
+			document.addEventListener("DOMContentLoaded", event => {
+			  // we can move only if we are not in a browser's tab
+			  isBrowser = matchMedia("(display-mode: browser)").matches;
+			  if (!isBrowser) {
+				  window.resizeTo(1024, 768);
+			  }
+			});
+		  </script>
 
 
 	</head>
