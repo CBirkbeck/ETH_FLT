@@ -412,7 +412,7 @@
 				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<h4>Matrices </h4>
 					<p>This is a good excuse to tell you about matrices!</p>
-					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-3|5-8" >					
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1,3|5,7-8|10" >					
 						local notation "M(" n ", " R ")" => Matrix (Fin n) (Fin n) R
 
 						local notation "SL(" n ", " R ")" => Matrix.SpecialLinearGroup (Fin n) R
@@ -422,6 +422,7 @@
 						lemma M_det {R : Type*} [CommRing R]  (a b c d : R) : (M a b c d).det = a * d - b * c := by 
   							exact Matrix.det_fin_two (M a b c d)
 
+						def S : SL(2, ℤ) := ⟨(M 0 (-1 : ℤ) 1 0),  by rfl⟩ 	
 					</code></pre>
 				
 				</section>
