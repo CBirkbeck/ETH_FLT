@@ -113,8 +113,8 @@
 							</div>
 						---
 						### Cases of Fermat's Last Theorem
-						- $n = 3$ (done in Lean by Ruben Van de Velde)
-						- $n=p$ is a **regular prime** (i.e. $p$ does not divide the class number of the $p$-th cyclotomic field)
+						- $n = 3$ (done in Lean by Ruben Van de Velde).
+						- $n=p$ is a **regular prime** (i.e. $p$ does not divide the class number of the $p$-th cyclotomic field).
 						- Some thoughts on the general case, to see how much is still missing from mathlib.
 					</textarea>
 				</section>
@@ -152,10 +152,10 @@
 				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<textarea data-template>
 						### Algebraic structures in Lean
-						- They are built from simpler ones by using **extends**
+						- They are built from simpler ones by using **extends**.
 						---
 						### Algebraic structures in Lean
-						- They are built from simpler ones by using **extends**
+						- They are built from simpler ones by using **extends**.
 						- If we keep going down the rabbit hole, we see **monoids**, **semigroups** and finally down to binary operations (`Mul`).
 						---
 						### Algebraic structures in Lean
@@ -223,13 +223,13 @@
 					<h4 style="text-transform: none;">FLT for \(n =3\)</h4>
 					<ul>
 						<li>The full result in this case has been done by Ruben, but it's not yet in mathlib.</li>
-						<li>One of the projects is to do this (doing it in a slightly different way to what Ruben did)</li>
+						<li>One of the projects is to do this (doing it in a slightly different way to how Ruben did it).</li>
 					</ul>
 				</section>
 				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<textarea data-template>
 						### FLT for regular primes
-						- Next lets look at the next case, which is for regular primes.
+						- Next let's look at the next case which is for regular primes.
 						<div class="definition">
 							<strong>Definition</strong>: 
 							A prime $p$ is regular if $p$ does not divide the class number of $\mathbb{Q}(\zeta_p)$.
@@ -302,7 +302,7 @@
 			
 				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<h4>Ideals in FLT </h4>
-					<p>Next lets look at one of the key ideas for the regular case of FLT, which is to turn it into a question about ideals.</p>
+					<p>Next let's look at one of the key ideas for the regular case of FLT, which is to turn it into a question about ideals.</p>
 				</section>
 				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<h4>Ideals in FLT </h4>
@@ -314,7 +314,7 @@
 				</section>
 				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<h4>Ideals in FLT </h4>
-					<p>The result you want to then prove is that these ideals are coprime (for different choices of root of unity and coprime x,y)</p>
+					<p>The result you want to then prove is that these ideals are coprime (for different choices of root of unity and coprime \(x,yz\) )</p>
 					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-5" >
 						theorem fltIdeals_IsCoprime [Fact (p : ℕ).Prime] (ph : 3 ≤ p) {x y : ℤ} {η₁ η₂ : R}
 							(hη₁ : η₁ ∈ nthRootsFinset p (𝓞 K))(hη₂ : η₂ ∈ nthRootsFinset p (𝓞 K)) 
