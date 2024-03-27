@@ -258,9 +258,11 @@
 				</section>
 				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<h4>Other homs</h4>
-					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-2|4-10|12-14|16-17">
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-2|4-12|14-16|18-19">
 						lemma mygrouplem (G1 G2 : Type*) [Group G1] [Group G2] (f : G1 →* G2) : f 1 = 1 := by 
   							exact MonoidHom.map_one f
+
+						variable {K R S : Type*} [Field K] [Ring R] [Ring S] [Algebra K R] [Algebra K S]	
 
 						def myalghom  : R →ₐ[K] S where
 							toFun := _ -- make the map
@@ -306,6 +308,7 @@
 						### FLT for regular primes
 						**Proof Idea**:
 						- Use the class number condition to get a contradiction.
+						- Profit!
 					</textarea>	
 				</section>
 				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
