@@ -365,7 +365,7 @@
 				</section>
 				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<h4>Ideals in FLT </h4>
-					<p>The result you want to then prove is that these ideals are coprime (for different choices of root of unity and coprime \(x,y,z\) )</p>
+					<p>The result you want to then prove is that these ideals are coprime (for different choices of root of unity and coprime \(x,y\) )</p>
 					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-5" >
 						theorem fltIdeals_IsCoprime [Fact (p : ℕ).Prime] (ph : 3 ≤ p) {x y : ℤ} {η₁ η₂ : R}
 							(hη₁ : η₁ ∈ nthRootsFinset p (𝓞 K))(hη₂ : η₂ ∈ nthRootsFinset p (𝓞 K)) 
@@ -484,10 +484,10 @@
 
 						def M_abcd (a b c d : R) : M(2, R) := !![a, b; c, d]
 
-						lemma M_det {R : Type*} [CommRing R]  (a b c d : R) : (M a b c d).det = a * d - b * c := by 
-  							exact Matrix.det_fin_two (M a b c d)
+						lemma M_det {R : Type*} [CommRing R]  (a b c d : R) : (M_abcd a b c d).det = a * d - b * c := by 
+  							exact Matrix.det_fin_two (M_abcd a b c d)
 
-						def S : SL(2, ℤ) := ⟨(M 0 (-1 : ℤ) 1 0),  by rfl⟩ 	
+						def S : SL(2, ℤ) := ⟨(M_abcd 0 (-1 : ℤ) 1 0),  by rfl⟩ 	
 					</code></pre>
 				
 				</section>
