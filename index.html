@@ -143,7 +143,7 @@
 							</div>
 						---
 						### Cases of Fermat's Last Theorem
-						- $n = 3$ (done in Lean by Ruben Van de Velde).
+						- $n = 3$. Some of you are doing now! also done in Lean by Ruben Van de Velde.
 						- $n=p$ is a **regular prime** (i.e. $p$ does not divide the class number of the $p$-th cyclotomic field).
 						- Some thoughts on the general case, to see how much is still missing from mathlib.
 					</textarea>
@@ -165,14 +165,14 @@
 				</section>
 				<section   data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<h2>Algebra</h2>
-					<p>The first thing we see is that it mentions a semiring, what is this in lean? </p>
+					<p>The first thing we see is that it mentions a semiring. We've seen this mentioned but what is it? </p>
 					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-4|6-9" >
 						/-- A `Semiring` is a type with addition, multiplication, a `0` and a `1` where addition is
 							commutative and associative, multiplication is associative and left and right distributive over
 							addition, and `0` and `1` are additive and multiplicative identities. -/
 						class Semiring (α : Type u) extends NonUnitalSemiring α, NonAssocSemiring α, MonoidWithZero α	
 						
-						/--For contex, this is what a ring is:-/
+						/--Canonical example is  ℕ. For contex, this is what a ring is:-/
 
 						/-- A `Ring` is a `Semiring` with negation making it an additive group. -/
 						class Ring (R : Type u) extends Semiring R, AddCommGroup R, AddGroupWithOne R
@@ -182,7 +182,7 @@
 				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<textarea data-template>
 						### Algebraic structures in Lean
-						- They are built from simpler ones by using **extends**.
+						- We've seen that commonly they are built from simpler ones by using **extends**.
 						---
 						### Algebraic structures in Lean
 						- They are built from simpler ones by using **extends**.
@@ -193,21 +193,28 @@
 					</textarea>	
 				</section>
 				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h4>Cheat Sheet </h4>
-					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1|3-4|6-7|9-10|12-13">
+					<h4>Recap/Cheat Sheet </h4>
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1|3-4|6-8|10-11|13-14|16-17|19-20">
 						variable {G R F : Type*} [Group G] [Ring R] [Field F] 
 
 						lemma mylem (H : Subgroup G) : 1 ∈ H := by 
   							exact Subgroup.one_mem H
 
-						theorem mythm {K R : Type*} [Field K] [Semiring R] [Algebra K R] : R = R := rfl
-						-- if I didn't say `Semiring R` then it would complain as the algebra instance requires this.
+						theorem mythm {K R : Type*} [CommSemiring K] [Semiring R] [Algebra K R] : 
+							algebraMap K R 1 = 1 := RingHom.map_one (algebraMap K R)
+						--algebraMap is the ring hom: R →+* A
 
 						theorem mythm2 {R : Type*} [CommRing R] (r : R) : 
 								Ideal.span ({r} : Set R) = Ideal.span ({r + 0} : Set R) := by rw [add_zero]
 
 						--It can infer that somethings are Rings
 						lemma int_lemma (a b : ℤ) : a^2 + b = b + a^2 := by ring
+
+						variable {S : Type*} [IsDomain S] [Semiring S]
+						--order matters. This will complain it doens't know S is a Semiring. 🛒 🐎
+
+						variable {S : Type*} [Semiring S] [IsDomain S]
+						-- this is fine 🐎 🛒 
 					</code></pre>
 				</section>
 				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
@@ -240,7 +247,7 @@
 					<p>Here is a nice example of a ring homomorphism</p>
 					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-2|4-8">
 						def castHom (h : m ∣ n) (R : Type*) [Ring R] [CharP R m] : ZMod n →+* R where 
-						-- `→+*` denotes a ring homomorphism
+						-- recall `→+*` denotes a ring homomorphism
 
 							toFun := cast  --whats the map, in this case its just pick a representative
 							map_zero' := cast_zero --make sure it sends 0 to 0
@@ -250,11 +257,26 @@
 					</code></pre>
 				</section>
 				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h4 style="text-transform: none;">FLT for \(n =3\)</h4>
-					<ul>
-						<li>The full result in this case has been done by Ruben, but it's not yet in mathlib.</li>
-						<li>One of the projects is to do this (doing it in a slightly different way to how Ruben did it).</li>
-					</ul>
+					<h4>Other homs</h4>
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-2|4-10|12-14|16-17">
+						lemma mygrouplem (G1 G2 : Type*) [Group G1] [Group G2] (f : G1 →* G2) : f 1 = 1 := by 
+  							exact MonoidHom.map_one f
+
+						def myalghom  : R →ₐ[K] S where
+							toFun := _ -- make the map
+							map_one' := _ -- check it sends 1 to 1
+							map_mul' := _ -- preserves multiplication
+							map_zero' := _ --maps 0 to 0
+							map_add' := _ -- preserves addition
+							commutes' := _ -- commutes with the algebra structure
+						  
+						/-- Reinterpret a `RingHom` as a `ℤ`-algebra homomorphism. -/
+						def toIntAlgHom [Ring R] [Ring S] [Algebra ℤ R] [Algebra ℤ S] (f : R →+* S) : R →ₐ[ℤ] S :=
+							{ f with commutes' := fun n => by simp }
+
+						def mylinmap (f : R →ₐ[K] S) : R →ₗ[K] S := f.toLinearMap 	
+						-- the →ₗ[K] stands for K-linear map 
+					</code></pre>
 				</section>
 				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<textarea data-template>
@@ -292,8 +314,8 @@
 						/-- A number field is a field which has characteristic zero and is finite
 						dimensional over ℚ. -/
 						class NumberField (K : Type*) [Field K] : Prop where
-						[to_charZero : CharZero K]
-						[to_finiteDimensional : FiniteDimensional ℚ K]
+							[to_charZero : CharZero K]
+							[to_finiteDimensional : FiniteDimensional ℚ K]
 
 						-- examples
 						variable {K : Type*} [Field K] [CharZero K] [IsCyclotomicExtension {3} ℚ K]
@@ -320,8 +342,7 @@
 							(hζ : IsPrimitiveRoot ζ ↑p) : IsIntegralClosure (adjoin ℤ ({ζ} : Set K)) ℤ K :=	by ...	
 						
 						noncomputable def _root_.IsPrimitiveRoot.adjoinEquivRingOfIntegers [IsCyclotomicExtension {p^k} ℚ K] 
-						(hζ : IsPrimitiveRoot ζ ↑(p ^ k)) :
-							adjoin ℤ ({ζ} : Set K) ≃ₐ[ℤ] 𝓞 K :=
+						(hζ : IsPrimitiveRoot ζ ↑(p ^ k)) : adjoin ℤ ({ζ} : Set K) ≃ₐ[ℤ] 𝓞 K :=
 						-- here ≃ₐ[ℤ] means it's a ℤ-algebra isomorphism.
 
 						/-- A natural number `n` is regular if `n` is coprime with the cardinal of the class group -/
@@ -332,7 +353,7 @@
 			
 				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<h4>Ideals in FLT </h4>
-					<p>Next let's look at one of the key ideas for the regular case of FLT, which is to turn it into a question about ideals.</p>
+					<p>So we can now state the result we want. After this you might want to start playing with ideals, so lets quickly  look at this.</p>
 				</section>
 				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<h4>Ideals in FLT </h4>
@@ -379,7 +400,7 @@
 						- Modular forms
 						---
 						### FLT in general
-						Let's very quickly look at how these work in mathlib and then I'll mention things that we don't have yet.
+						Let's look at the basic definitions in mathlib and then I'll mention things that we don't have yet.
 						---
 						### Elliptic Curves 
 						Roughly, these are geometric objects defined by solutions to cubic equations of the form 
@@ -424,17 +445,18 @@
 				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<h4>Elliptic curves </h4>
 					<p>We know non-trivial things about elliptic curves in mathlib, such as:</p>
-					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-4" >
-						variables  (E : EllipticCurve ℚ)
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-5" >
+						variables  (E : EllipticCurve (GaloisField 2 10))
+						-- GaloisField 2 10 is the finite field with 2^10 elements.
 
-						example (P Q R : E.toAffine.Point) : P + (Q + R) = P + Q + R := by 
+						example (P Q R : E.toAffine.Point) : P + (Q + R) = (P + Q) + R := by 
 							exact (WeierstrassCurve.Affine.Point.add_assoc P Q R).symm
 					</code></pre>
 				</section>
 
 				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<h4>Modular forms </h4>
-					<p>These are holomorphic functions \(f : \mathbb{H} \to \mathbb{C}, \) with some bounded coundition at infinity such that for some fixed \(k \in \mathbb{Z}\) and \(\Gamma \in \mathrm{SL}_2(\mathbb{Z}) \) we have \[f \left(\frac{az+b}{cz+d} \right) = (cz+d)^k f(z)  \]	
+					<p>These are holomorphic functions \(f : \mathbb{H} \to \mathbb{C}, \) with some bounded coundition at infinity such that for some fixed \(k \in \mathbb{Z}\) and \(\Gamma \subseteq \mathrm{SL}_2(\mathbb{Z}) \) we have \[f \left(\frac{az+b}{cz+d} \right) = (cz+d)^k f(z)  \]	
 					for all \( \left ( \begin{smallmatrix} a & b \\ c & d \end{smallmatrix} \right)  \in \Gamma \) and \(z \in \mathbb{H}\). </p>
 
 					
@@ -483,6 +505,17 @@
 				</section>
 
 				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>Modularity </h4>
+					<p>Be careful stating your theorems!</p>
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-5" >
+						def ModularityConjecture (E : EllipticCurve ℚ) : Prop :=
+							∃ (N : ℕ) (f : CuspForm (Gamma0 N) 2), IsNormalisedEigenform f ∧ 
+								∀ (p : ℕ), p.Prime → (N : ZMod p) ≠ 0 → a_[p]f = E.ap p
+						/- this one just says, does there exist a normalised eigenform of any level!-/
+					</code></pre>
+				</section>
+
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<h4>Algebra and Number theory in mathlib</h4>
 					<p>Going back to our original goal, we see that:</p>
 					<ul>
@@ -507,16 +540,6 @@
 					<ul>
 						<li>More ring theory: Gorenstein rings</li>
 						<li>More modular form theory: Hecke algebras*</li>
-						<li>Representation theory: (p-adic) Cyclotomic characters*</li>
-						<li>Lie algebra cohomology</li>
-					</ul>
-					<hr/>
-  					<div style="text-align: left; font-size: 0.5em">* means I know some people are thinking about this, ask on Zulip if interested.</div>
-					
-				</section>
-				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h4>Algebra and Number theory in mathlib</h4>
-					<ul>
 						<li>Tate curves</li>
 						<li>Chebotarev's density theorem*</li>
 						<li>Local and global class field theory*</li>
@@ -525,6 +548,7 @@
 					</ul>
 					<hr/>
   					<div style="text-align: left; font-size: 0.5em">* means I know some people are thinking about this, ask on Zulip if interested.</div>
+					
 				</section>
 
 				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
