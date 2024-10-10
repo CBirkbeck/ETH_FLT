@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>LfTCM_ANT</title>
+		<title>ETH_FLT</title>
 
 		<meta name="description" content="Algebra and Number Theory in Lean">
 		<meta name="author" content="Chris Birkbeck">
@@ -25,6 +25,28 @@
 		    font-size: 0.6em; /* Change 80% to whatever width you prefer */
 		}
 		</style>
+		 <script type="module">
+			import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@9/dist/mermaid.esm.min.mjs';
+			mermaid.initialize({
+				startOnLoad: true,
+				theme: 'base',
+				themeVariables: {
+					primaryColor: 'rgba(255, 255, 255, 0.050)',
+					primaryTextColor: '#fff',
+					primaryBorderColor: 'rgba(255, 255, 255, 0.18)',
+					boxShadow: '0 8px 12px rgba(0,0,0,0.1)',
+					nodeBorderRadius: '15px',
+					padding: '20px',
+					margin: '10px',
+					minWidth: '400px',
+					backdropFilter: 'blur(20px)',
+					webkitBackdropFilter: 'blur(20px)',
+					fontWeight: 'bold',
+					textAlign: 'center',
+					lineHeight: '2'
+				}
+			});
+		</script>
 		<style>
 		.reveal .slides {
 		    width: 100%; /* Adjust this value as needed */
@@ -41,6 +63,7 @@
 			background-color: #2c3e50; /* Dark grey background */
 			
 		}
+		
 		
 		.reveal .theorem p:first-child, .reveal .definition p:first-child {
 			margin-top: 0;
@@ -90,7 +113,6 @@
 			margin-bottom: 0;
 			}
 		</style>
-
 	</head>
 
 	<body>
@@ -100,52 +122,103 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			 <div class="slides" >
 				<section data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h1>Algebra and Number Theory in Lean</h1>
+					<h2>
+						<span style="text-transform: none;">The regular case of Fermat's Last Theorem in</span>
+		
+						<span style="text-transform: none; color: #000000">Lean</span>
+					</h2>
 					<p>
 						<small>Chris Birkbeck</small>
 					</p>
 					<p>
 						<small>University of East Anglia</small>
 					</p>
-					<small>slides: <a style="color: #000000;" href="https://cbirkbeck.github.io/LfTCM2024_web/">
-						cbirkbeck.github.io/LfTCM2024_web/</a></small>
-						<small style="display: block;  text-align: center; opacity: 0.5">2024-03-28</small>
+					<small>slides: <a style="color: #000000;" href="https://cbirkbeck.github.io/ETH_FLT/">
+						cbirkbeck.github.io/ETH_FLT/</a></small>
+						<small style="display: block;  text-align: center; opacity: 0.5">2024-10-18</small>
 				</section>
 
 				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<textarea data-template>
-						### Tour of the algebra and number theory in mathlib
+						### <span style="text-transform: none;">What is Lean?</span>
 						---
-						### Tour of the algebra and number theory in mathlib
-						- The **bad** news is that there isn't enough time to cover everything.
+						### <span style="text-transform: none;">What is Lean?</span>
+						- Lean is a specialised computer language for writing and verifying mathematical proofs.
 						---
-						### Tour of the algebra and number theory in mathlib
-						- The **good** news is that there isn't enough time to cover everything (since people have been hard at work adding lots of stuff to mathlib).
+						### <span style="text-transform: none;">What is Lean?</span>
+						- Lean is a specialised computer language for writing and verifying mathematical proofs.
+						- Using Lean we are creating a digital library of mathematics called mathlib (some call it a digital Bourbaki).
 						---
-						The idea for today is to look at some of the algebra and number theory available in mathlib and some demos on how to use it.
+						### <span style="text-transform: none;">Why do this?</span>
 						---
-						### Fermat's Last Theorem
-						- To help organise our thoughts, we'll use Fermat's Last Theorem as a guiding example.
+						### <span style="text-transform: none;">Why do this?</span>
+						- Its fun!
 						---
-						### Fermat's Last Theorem
-						- To help organise our thoughts, we'll use Fermat's Last Theorem as a guiding example.
-						- By looking at the proofs for differing levels of generality, we can see how the algebra and number theory in mathlib can be used.
+						### <span style="text-transform: none;">Why do this?</span>
+						- Its fun!
+						- It's nice to be able to verify proofs.
 						---
-						### Fermat's Last Theorem
-						- We'll use Fermat's Last Theorem as a guiding example.
-						- By looking at the proofs for differing levels of generality, we can see how the algebra and number theory in mathlib can be used.
-						- Conflict of interest: I'm a number theorist and I've collaborated on a FLT project  in Lean. So lots of other interesting bits of mathlib that I know (even) less about will be left out.
+						### <span style="text-transform: none;">Why do this?</span>
+						- Its fun!
+						- It's nice to be able to verify proofs.
+						- We are seeing interesting developments in the field, such as <span style="text-transform: none; color: #000000">AlphaProof</span> "winning" a silvere medal at this year's IMO.
 						---
-						### Fermat's Last Theorem
+						### <span style="text-transform: none;">Why do this?</span>
+						- Its fun!
+						- It's nice to be able to verify proofs.
+						- We are seeing interesting developments in the field, such as <span style="text-transform: none; color: #000000">AlphaProof</span>  "winning" a silvere medal at this year's IMO.
+						- Growing interest from mathematicians. For example, <span style="text-transform: none; color: #000000"> Scholze</span> and  <span style="text-transform: none; color: #000000">Tao</span>.
+						---
+						### <span style="text-transform: none;">Current state of Lean/mathlib</span>
+						- Still lots of maths needs to be formalised before we can begin formalising current reseach in most (not all!) areas.
+						---
+						### <span style="text-transform: none;">Current state of Lean/mathlib</span>
+						- Still lots of maths needs to be formalised before we can begin formalising current reseach in most (not all!) areas.
+						- Its non-trivial to turn known maths into Lean code (we'll see some examples of this today).
+						---
+						### <span style="text-transform: none;">Current state of Lean/mathlib</span>
+						- Still lots of maths needs to be formalised before we can begin formalising current reseach in most (not all!) areas.
+						- Its non-trivial to turn known maths into Lean code (we'll see some examples of this today).
+						- While LLMs are getting better, they are still far from being able to do anything really new.
+						---
+						### Today 
+						- I'll discuss some work formalising the regular case of Fermat's Last Theorem in Lean.
+						---
+						### Today 
+						- I'll discuss some work formalising the regular case of Fermat's Last Theorem in Lean.
+						- I'll try to highlight the difficulties that we encountered and some solutions to them.
+						---
+						### Today 
+						- I'll discuss some work formalising the regular case of Fermat's Last Theorem in Lean.
+						- I'll try to highlight the difficulties that we encountered and some solutions to them.
+						- This is all joint work with <span style="text-transform: none; color: #000000"> A.J. Best, R. Brasca, E. Rodriguez, R. Van de Velde</span>  and <span style="text-transform: none; color: #000000">A. Yang</span> 
+						---
+						### <span style="text-transform: none;">Fermat's Last Theorem</span> 
 						<div class="definition">
 							<strong>Theorem</strong>: 
 							Let $x,y,z,n \in \mathbb{N}$ and $n \geq 3$. Then $$x^n + y^n = z^n$$ has no solutions with $xyz \neq 0$. 
 							</div>
 						---
-						### Cases of Fermat's Last Theorem
-						- $n = 3$. Some of you are doing this now! Also done in Lean by Ruben Van de Velde.
-						- $n=p$ is a **regular prime** (i.e. $p$ does not divide the class number of the $p$-th cyclotomic field).
-						- Some thoughts on the general case (cf. Kevin Buzzard), to see how much is still missing from mathlib.
+						### <span style="text-transform: none;">The regular case </span>
+						<div class="definition">
+							<strong>Definition</strong>: 
+							A prime $p$ is regular if $p$ does not divide the class number of $\mathbb{Q}(\zeta_p)$.
+							</div>		
+						---
+						### <span style="text-transform: none;">The regular case </span>
+						- If we take the exponent $n=p$  **a regular prime** we call this the regular case (first irregular prime is 37).
+						---
+						### <span style="text-transform: none;">The regular case </span>
+						- If we take the exponent $n=p$  **a regular prime** we call this the regular case (first irregular prime is 37).
+						- Proof in this case is much easier than the general case and was known to Kummer.
+						---
+						### <span style="text-transform: none;">The regular case </span>
+						- If we take the exponent $n=p$  **a regular prime** we call this the regular case (first irregular prime is 37).
+						- Proof in this case is much easier than the general case and was known to Kummer.
+						- I'll first show you the formalised statement in Lean and then remind you how the proof goes.  
+
+						
+					
 					</textarea>
 				</section>
 				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
@@ -163,369 +236,475 @@
 						def FermatLastTheorem : Prop := ∀ n ≥ 3, FermatLastTheoremFor n
 					</code></pre>
 				</section>
-				<section   data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h2>Algebra</h2>
-					<p>The first thing we see is that it mentions a semiring. We've seen this mentioned but what is it? </p>
-					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-4|6-9" >
-						/-- A `Semiring` is a type with addition, multiplication, a `0` and a `1` where addition is
-							commutative and associative, multiplication is associative and left and right distributive over
-							addition, and `0` and `1` are additive and multiplicative identities. -/
-						class Semiring (α : Type u) extends NonUnitalSemiring α, NonAssocSemiring α, MonoidWithZero α	
-						
-						/--Canonical example is  ℕ. For contex, this is what a ring is:-/
+				
+				
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>Cyclotomic fields </h4>
+					<p>Before even stating what a regular prime is we needed to define cyclotomic fields!</p>
+			
 
-						/-- A `Ring` is a `Semiring` with negation making it an additive group. -/
-						class Ring (R : Type u) extends Semiring R, AddCommGroup R, AddGroupWithOne R
+
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" >
+						/-- Given `n : ℕ+` and a field `K`, we define `CyclotomicField n K` as the
+							splitting field of `cyclotomic n K`. If `n` is nonzero in `K`, it has
+							the instance `IsCyclotomicExtension {n} K (CyclotomicField n K)`. -/
+							def CyclotomicField : Type w :=
+								(cyclotomic n K).SplittingField
 					</code></pre>
+		
 				</section>
 
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>Cyclotomic fields </h4>
+					<p>More generally</p>
+			
+
+
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1|2-4|5-6">
+						variable [CommRing A] [CommRing B] [Algebra A B] (S : Set ℕ+)				
+						class IsCyclotomicExtension : Prop where
+						/-- For all `n ∈ S`, there exists a primitive `n`-th root of unity in `B`. -/
+						exists_prim_root {n : ℕ+} (ha : n ∈ S) : ∃ r : B, IsPrimitiveRoot r n
+						/-- The `n`-th roots of unity, for `n ∈ S`, generate `B` as an `A`-algebra. -/
+						adjoin_roots : ∀ x : B, x ∈ adjoin A {b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1}
+					</code></pre>
+		
+				</section>
+				
+				
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" >
+						variable [CommRing A] [CommRing B] [Algebra A B] (S : Set ℕ+)				
+						class IsCyclotomicExtension : Prop where
+						/-- For all `n ∈ S`, there exists a primitive `n`-th root of unity in `B`. -/
+						exists_prim_root {n : ℕ+} (ha : n ∈ S) : ∃ r : B, IsPrimitiveRoot r n
+						/-- The `n`-th roots of unity, for `n ∈ S`, generate `B` as an `A`-algebra. -/
+						adjoin_roots : ∀ x : B, x ∈ adjoin A {b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1}
+					</code></pre>
+					<ul>
+						<li>We chose to work with <span style="text-transform: none; color: #000000">positive</span>  natural numbers since we didn't want to have to exclude the $0$-th cyclitomic extention all over the place.</li>
+						<li>This was at the cost of later having lots of extra coercions.</li>
+					</ul>
+				</section>
+
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" >
+						variable [CommRing A] [CommRing B] [Algebra A B] (S : Set ℕ+)				
+						class IsCyclotomicExtension : Prop where
+						/-- For all `n ∈ S`, there exists a primitive `n`-th root of unity in `B`. -/
+						exists_prim_root {n : ℕ+} (ha : n ∈ S) : ∃ r : B, IsPrimitiveRoot r n
+						/-- The `n`-th roots of unity, for `n ∈ S`, generate `B` as an `A`-algebra. -/
+						adjoin_roots : ∀ x : B, x ∈ adjoin A {b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1}
+					</code></pre>
+					<ul>
+						<li>Using this class is like proving things for abstract cyclotomic extensions, not a fixed choice of 'model'.</li>
+						<li>Enables nice automation, such as Lean automatically figuring out its a field or algebra, etc.</li>
+					</ul>
+				</section>
+				
+				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<h4>Regular FLT </h4>
+					<p>With this we can then state our main result!</p>
+			
+
+
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-3|5-7|9-11|12-19">
+						/-- A natural number `n` is regular if `n` is coprime with the cardinal of the class group -/
+						def IsRegularNumber [hn : Fact (0 < n)] : Prop :=
+							n.Coprime <| Fintype.card <| ClassGroup (𝓞 <| CyclotomicField ⟨n, hn.out⟩ ℚ)
+
+						/-- The definition of regular primes. -/
+						def IsRegularPrime : Prop :=
+							IsRegularNumber p
+
+						/-- Fermat's last theorem for regular primes. -/
+						theorem flt_regular {p : ℕ} [Fact p.Prime] (hreg : IsRegularPrime p) (hodd : p ≠ 2) :
+							FermatLastTheoremFor p := by
+						apply fermatLastTheoremFor_iff_int.mpr -- suffices to prove the integer version
+						intro a b c ha hb hc e
+						have hprod := mul_ne_zero (mul_ne_zero ha hb) hc
+						obtain ⟨e', hgcd, hprod'⟩ := MayAssume.coprime e hprod
+						let d := ({a, b, c} : Finset ℤ).gcd id
+						by_cases case : ↑p ∣ (a / d) * (b / d) * (c / d)
+						exact caseII hreg hodd hprod' hgcd case e'
+						exact caseI hreg case e' case
+					</code></pre>
+		
+				</section>
+				
+				
+				
+				
 				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<textarea data-template>
-						### Algebraic structures in Lean
-						- We've seen that commonly they are built from simpler ones by using **extends**.
-						---
-						### Algebraic structures in Lean
-						- They are built from simpler ones by using **extends**.
-						- If we keep going down the rabbit hole, we see **monoids**, **semigroups** and finally down to binary operations (`Mul`).
-						---
-						### Algebraic structures in Lean
-						- The same is true for Groups, Rings, Fields, Algebras, etc.
-					</textarea>	
-				</section>
-				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h4>Recap/Cheat Sheet </h4>
-					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1|3-4|6-8|10-11|13-14|16-17|19-20">
-						variable {G R F : Type*} [Group G] [Ring R] [Field F] 
-
-						lemma mylem (H : Subgroup G) : 1 ∈ H := by 
-  							exact Subgroup.one_mem H
-
-						theorem mythm {K R : Type*} [CommSemiring K] [Semiring R] [Algebra K R] : 
-							algebraMap K R 1 = 1 := RingHom.map_one (algebraMap K R)
-						--algebraMap is the ring hom: R →+* A
-
-						theorem mythm2 {R : Type*} [CommRing R] (r : R) : 
-								Ideal.span ({r} : Set R) = Ideal.span ({r + 0} : Set R) := by rw [add_zero]
-
-						--It can infer that somethings are Rings
-						lemma int_lemma (a b : ℤ) : a^2 + b = b + a^2 := by ring
-
-						variable {S : Type*} [IsDomain S] [Semiring S]
-						--order matters. This will complain it doens't know S is a Semiring. 🛒 🐎
-
-						variable {S : Type*} [Semiring S] [IsDomain S]
-						-- this is fine 🐎 🛒 
-					</code></pre>
-				</section>
-				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h4 style="text-transform: none;">FLT for \(n =3\)</h4>
-					<p>Here is the easy step in this proof, which involves reducing modulo 9</p>
-					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-3|5-8|10-19">
-						private lemma cube_of_castHom_ne_zero {n : ZMod 9} :
-								castHom (show 3 ∣ 9 by norm_num) (ZMod 3) n ≠ 0 → n ^ 3 = 1 ∨ n ^ 3 = 8 := by
-							fin_cases n <;> decide
-
-						private lemma cube_of_not_dvd {n : ℕ} (h : ¬ 3 ∣ n) :
-								(n : ZMod 9) ^ 3 = 1 ∨ (n : ZMod 9) ^ 3 = 8 := by  --what are the cubes mod 9
-							apply cube_of_castHom_ne_zero
-							rwa [map_natCast, Ne, Fin.nat_cast_eq_zero]
-
-						/--If `a b c : ℕ` are such that `¬ 3 ∣ a * b * c`, then `a ^ 3 + b ^ 3 ≠ c ^ 3`. -/
-						theorem fermatLastTheoremThree_case_1 {a b c : ℕ} (hdvd : ¬ 3 ∣ a * b * c) :
-								a ^ 3 + b ^ 3 ≠ c ^ 3 := by
-							simp_rw [Nat.prime_three.dvd_mul, not_or] at hdvd
-							apply mt (congrArg (Nat.cast : ℕ → ZMod 9)) -- turn this into a mod 9 check
-							simp_rw [Nat.cast_add, Nat.cast_pow] --deal with coercions 
-							rcases cube_of_not_dvd hdvd.1.1 with ha | ha <;> --split into cases
-							rcases cube_of_not_dvd hdvd.1.2 with hb | hb <;>
-							rcases cube_of_not_dvd hdvd.2 with hc | hc <;>
-							rw [ha, hb, hc] <;> decide --case bash 
-					</code></pre>
-				</section>
-				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h4 style="text-transform: none;">FLT for \(n =3\)</h4>
-					<p>Here is a nice example of a ring homomorphism</p>
-					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-2|4-8">
-						def castHom (h : m ∣ n) (R : Type*) [Ring R] [CharP R m] : ZMod n →+* R where 
-						-- recall `→+*` denotes a ring homomorphism
-
-							toFun := cast  --whats the map, in this case its just pick a representative
-							map_zero' := cast_zero --make sure it sends 0 to 0
-							map_one' := cast_one h --make sure it sends 1 to 1
-							map_add' := cast_add h -- make sure it preserves addition
-							map_mul' := cast_mul h -- make sure it preserves multiplication
-					</code></pre>
-				</section>
-				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h4>Other homs</h4>
-					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-2|4-12|14-16|18-19">
-						lemma mygrouplem (G1 G2 : Type*) [Group G1] [Group G2] (f : G1 →* G2) : f 1 = 1 := by 
-  							exact MonoidHom.map_one f
-
-						variable {K R S : Type*} [Field K] [Ring R] [Ring S] [Algebra K R] [Algebra K S]	
-
-						def myalghom  : R →ₐ[K] S where
-							toFun := _ -- make the map
-							map_one' := _ -- check it sends 1 to 1
-							map_mul' := _ -- preserves multiplication
-							map_zero' := _ --maps 0 to 0
-							map_add' := _ -- preserves addition
-							commutes' := _ -- commutes with the algebra structure
-						  
-						/-- Reinterpret a `RingHom` as a `ℤ`-algebra homomorphism. -/
-						def toIntAlgHom [Ring R] [Ring S] [Algebra ℤ R] [Algebra ℤ S] (f : R →+* S) : R →ₐ[ℤ] S :=
-							{ f with commutes' := fun n => by simp }
-
-						def mylinmap (f : R →ₐ[K] S) : R →ₗ[K] S := f.toLinearMap 	
-						-- the →ₗ[K] stands for K-linear map 
-					</code></pre>
-				</section>
-				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<textarea data-template>
-						### FLT for regular primes
-						- Next let's look at the next case which is for regular primes.
+						### <span style="text-transform: none;">FLT for regular primes </span>
+						The proof splits into two cases:
 						<div class="definition">
-							<strong>Definition</strong>: 
-							A prime $p$ is regular if $p$ does not divide the class number of $\mathbb{Q}(\zeta_p)$.
+							<strong>Case I</strong>: 
+							Let $p \neq 2$ be a regular prime. Then $$x^p+y^p=z^p$$ has no solutions with $x,y,z \in \Z$ and $\gcd(xyz,p)=1$.
 							</div>
-						
-						
-						- (First **non**-example is $p=37$)
-						
 						---
-						### FLT for regular primes
-						- Clearly this is a bit more involved, requiring cyclotomic fields and class numbers.
+						### <span style="text-transform: none;">FLT for regular primes </span>
+						<div class="definition">
+							<strong>Case II</strong>: 
+							Let $p \neq 2$ be a regular prime. Then there are no solutions to $x^p+y^p=z^p$ with 
+							<ul>
+								<li>$xyz \neq 0$.</li>
+								<li>$\gcd(x, y, z) = 1$.</li>
+								<li>$p \mid xyz$.</li>
+							</ul>
+							</div>
 						---
-						### FLT for regular primes
+						### <span style="text-transform: none;">Case I </span> 
 						**Proof Idea**: 
 						- Factor in $\mathbb{Q}(\zeta_p)$ to get $$x^p+y^p=\prod_{i=0}^{p-1} (x+\zeta_p^i y)$$
 						---
-						### FLT for regular primes
+						### <span style="text-transform: none;">Case I </span> 
 						**Proof Idea**: 
 						- Factor in $\mathbb{Q}(\zeta_p)$ to get $$x^p+y^p=\prod_{i=0}^{p-1} (x+\zeta_p^i y)$$
 						- Turn this into a question about ideals in $\mathbb{Z}[\zeta_p]$ (the ring of integers of $\mathbb{Q}(\zeta_p)$)
 						---
-						### FLT for regular primes
+						### <span style="text-transform: none;">Case I </span> 
 						**Proof Idea**:
 						- Use the class number condition to get a contradiction.
 						- Profit!
 					</textarea>	
+				</section>	
+
+				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<textarea data-template>
+						### <span style="text-transform: none;">This required: </span> 
+						- Definitions of cyclotomic fields and cyclotomic extensions.
+						---
+						### <span style="text-transform: none;">This required:</span> 
+						- Definitions of cyclotomic fields and cyclotomic extensions.
+						- Definitions of norms, trace and discriminant for number fields.
+						---
+						### <span style="text-transform: none;">This required:</span> 
+						- Definitions of cyclotomic fields and cyclotomic extensions.
+						- Definitions of norms, trace and discriminant for number fields.
+						- Computing the discriminant and ring of integers for $p$-power cyclotomic fields.
+						---
+						### <span style="text-transform: none;">This required:</span> 
+						- Specific results about units in these cyclotomic fields.  <span style="text-transform: none; color: #000000"> For example</span>, that for $p \ne 2$ a prime, every unit $u \in \Z[\zeta_p]^\times$ can be written as $u=x \zeta_p^n$ for some $n \in \Z$ and $x \in \Z[\zeta_p]^\times$ such that $x \in \mathbb{R}$.
+						---
+						### <span style="text-transform: none;">This required: </span> 
+						- The proof of FLT for $n=3$ which was done independently by one of us (RVdV).
+						- This is because at some point in the proof you need to check that four $p$-th roots of unity are distinct.
+						---
+						### <span style="text-transform: none;">This required </span> 
+						- Dealing with lots of coercions issues. For example, for $R$ a ring and $K$ is field of fractions, we tend to think of $u \in R^\times$ as an element of $R^\times, R$ and $F$ all at once.
+						- In Lean we need to explicitly say things like:
+						<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" >
+						lemma coe_coe_inv (u : Rˣ) : ((u : R) : K)⁻¹ = (((u⁻¹ : Rˣ) : R) : K)
+						</code></pre>
+					</textarea>	
 				</section>
-				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h4>Number fields </h4>
-					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-5|6-11|13-15" >
-						/-- A number field is a field which has characteristic zero and is finite
-						dimensional over ℚ. -/
-						class NumberField (K : Type*) [Field K] : Prop where
-							[to_charZero : CharZero K]
-							[to_finiteDimensional : FiniteDimensional ℚ K]
 
-						-- examples
-						variable {K : Type*} [Field K] [CharZero K] [IsCyclotomicExtension {3} ℚ K]
-
-						instance : NumberField K := IsCyclotomicExtension.numberField {3} ℚ K
-						-- this is an abstract cyclotomic extension 
-
-						variable (p : ℕ+)
-						--here is a concrete cyclotomic extension (i.e. the splitting field of p-th cyclotomic polynomial)
-						instance : IsGalois ℚ (CyclotomicField p ℚ) := IsCyclotomicExtension.isGalois p _ _
-					</code></pre>
+				
+				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<textarea data-template>
+						### <span style="text-transform: none;">Case II </span> 
+						- This is the tricky one
+						---
+						### <span style="text-transform: none;">Case II </span>
+						- This is the tricky one
+						- The key result that you eventually need is Kummer's Lemma:
+						---
+						<div class="theorem">
+							<strong>Kummer's Lemma</strong>: 
+							Let $p$ be an odd regular prime and let $\zeta$ be a primitive $p$-th root of unity and $K = \mathbb{Q}(\zeta)$. 
+							If $u \in \mathcal{O}_K^\times$ is a unit such that $$u \equiv n \bmod p$$ for some integer $n$, then there exists $v \in \mathcal{O}_K^\times$ 
+							such that $u = v^p$.
+							</div>
+					</textarea>	
 				</section>
 
-				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h4>Rings of integers </h4>
-					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-5|7-8|10-13|15-17" >
-						/-- The ring of integers (or number ring) corresponding to a number field
-						is the integral closure of ℤ in the number field. -/
-						def ringOfIntegers :=
-							integralClosure ℤ K --here K is a number field
-						-- if you `open NumberField` then you can write 𝓞 K for the ring of integers of K	
+								
+				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<textarea data-template>
+						### <span style="text-transform: none;">Case II: reduction </span> 
+						- The idea is to assume you have a solution in this case, and wlog that $p \mid z$, so $z=p^k z_0$.
+						---
+						### <span style="text-transform: none;">Case II: reduction </span>
+						- The idea is to assume you have a solution in this case, and wlog that $p \mid z$, so $z=p^k z_0$.
+						- Then you consider the more gerenal equation in $\mathcal{O}_K$:  $$x^p+y^p=\varepsilon(\zeta-1)^{pm}z_0^p$$ with $\varepsilon$ a unit and $m$ ∈ ℕ+. Then show that this has no solutions.
+						---
+						### <span style="text-transform: none;">Case II: reduction </span>
+						- The proof is a descent argument were you assume you have a solution to $$x^p+y^p=\varepsilon(\zeta-1)^{pm}z_0^p$$ and then get a solution for $m-1$.
+						---
+						### <span style="text-transform: none;">Case II: reduction </span>
+						- The proof is a descent argument were you assume you have a solution to $$x^p+y^p=\varepsilon(\zeta-1)^{pm}z_0^p$$ and then get a solution for $m-1$.
+						- In doing these simple mainpulations you end up needing Kummer's lemma to rearrange things to give this "smaller" solution.
+					</textarea>	
+				</section>
 
-						theorem isIntegralClosure_adjoin_singleton_of_prime [hcycl : IsCyclotomicExtension {p} ℚ K]
-							(hζ : IsPrimitiveRoot ζ ↑p) : IsIntegralClosure (adjoin ℤ ({ζ} : Set K)) ℤ K :=	by ...	
-						
-						noncomputable def _root_.IsPrimitiveRoot.adjoinEquivRingOfIntegers [IsCyclotomicExtension {p^k} ℚ K] 
-						(hζ : IsPrimitiveRoot ζ ↑(p ^ k)) : adjoin ℤ ({ζ} : Set K) ≃ₐ[ℤ] 𝓞 K :=
-						-- here ≃ₐ[ℤ] means it's a ℤ-algebra isomorphism.
 
-						/-- A natural number `n` is regular if `n` is coprime with the cardinal of the class group -/
-						def IsRegularNumber [hn : Fact (0 < n)] : Prop :=
-						n.Coprime <| Fintype.card <| ClassGroup (𝓞 <| CyclotomicField ⟨n, hn.out⟩ ℚ)
-					</code></pre>
-				</section>
-			
-				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h4>Ideals in FLT </h4>
-					<p>So we can now state the result we want. After this you might want to start playing with ideals, so lets quickly  look at this.</p>
-				</section>
-				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h4>Ideals in FLT </h4>
-					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-3" >
-						def fltIdeals (x y : ℤ) (n : ℕ) {η : R} (_ : η ∈ nthRootsFinset n (𝓞 K)) : Ideal (𝓞 K) :=
-  							Ideal.span ({x + η * y} : Set (𝓞 K))  
-						-- here `nthRootsFinset n 𝓞 K` is the set of nth roots of unity in (𝓞 K)	
-					</code></pre>
-				</section>
-				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h4>Ideals in FLT </h4>
-					<p>The result you want to then prove is that these ideals are coprime (for different choices of root of unity and coprime \(x,y\) )</p>
-					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-5" >
-						theorem fltIdeals_IsCoprime [Fact (p : ℕ).Prime] (ph : 3 ≤ p) {x y : ℤ} {η₁ η₂ : R}
-							(hη₁ : η₁ ∈ nthRootsFinset p (𝓞 K))(hη₂ : η₂ ∈ nthRootsFinset p (𝓞 K)) 
-							(hdiff : η₁ ≠ η₂) (hp : IsCoprime x y) (hp2 : ¬(p : ℤ) ∣ (x + y : ℤ)) 
-							(hwlog : η₁ ≠ 1) : IsCoprime (fltIdeals p x y hη₁) (fltIdeals p x y hη₂) := by ...
-					</code></pre>
+
+
+				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<textarea data-template>
+						### <span style="text-transform: none;">Modern proof of Kummer's Lemma </span> 
+						<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch"  >
+								theorem Kummer (u : (𝓞 K)ˣ) (hcong : ∃ n : ℤ, (p : 𝓞 K) ∣ (u - n : 𝓞 K)) :
+									∃ v, u = v ^ (p : ℕ)
+						</code></pre>
+						- Note  $K(u^{1/p})/K$ is a Kummer, hence abelian, extension. 
+					</textarea>	
 				</section>
 
 				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<textarea data-template>
-						### FLT for regular primes
-						- To finish off the proof actually requires lots of other things:
-						- Hilbert 90-94.
-						- Dirichlet's unit theorem.
-						- The relative different ideal (and general ramification results).
-						---
-						### FLT in general
-						- As we get closer to current research, things get more complicated. 
-						---
-						### FLT in general
-						- As we get closer to current research, things get more complicated. 
-						- For example, the proof of full FLT one needs to turn this algebraic question into an analytic one.
-						---
-						### FLT in general
-						- As we get closer to current research, things get more complicated. 
-						- For example, for the proof of full FLT, one needs to turn this algebraic question into an analytic one.
-						- The key is the modularity theorem. 
-						---
-						### FLT in general
-						To even state this, we want:
-						- Elliptic curves
-						- Modular forms
-						---
-						### FLT in general
-						Let's look at the basic definitions in mathlib and then I'll mention things that we don't have yet.
-						---
-						### Elliptic Curves 
-						Roughly, these are geometric objects defined by solutions to cubic equations of the form 
-						$$y^2 = x^3 + ax + b$$
-						---
-						### Elliptic Curves 
-						Roughly, these are geometric objects defined by solutions to cubic equations of the form 
-						$$y^2 + a_1xy  + a_2y = x^3 + a_2 x^2 + a_4x + a_6$$
-						(you also want the discriminant of this cubic to be non-zero)
-						
-		
+						### <span style="text-transform: none;">Modern proof of Kummer's Lemma </span> 
+						<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch"  >
+							theorem KummersLemma (u : (𝓞 K)ˣ)
+							(hcong : ∃ n : ℤ, (p : 𝓞 K) ∣ (u - n : 𝓞 K)) :
+							∃ v, u = v ^ (p : ℕ)
+					</code></pre>
+
+						- Note $K(u^{1/p})/K$ is a Kummer, hence abelian, extension. If its degree was $p$, then:
+						- Show $K(u^{1/p})/K$ is everywhere unramified, so contained in the Hilbert class field of $K$, call it $L$.
+					</textarea>	
+				</section>
+				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<textarea data-template>
+						### <span style="text-transform: none;">Modern proof of Kummer's Lemma </span> 
+						<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch"  >
+							theorem KummersLemma (u : (𝓞 K)ˣ)
+							(hcong : ∃ n : ℤ, (p : 𝓞 K) ∣ (u - n : 𝓞 K)) :
+							∃ v, u = v ^ (p : ℕ)
+					</code></pre>
+						- Show $K(u^{1/p})/K$ is everywhere unramified, so contained in the Hilbert class field of $K$, call it $L$.	
+						- So we'd have $p \mid [L : K]$, but this is the class number and $p$ is regular!
+					</textarea>	
+				</section>
+				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<textarea data-template>
+						### <span style="text-transform: none;">Modern proof of Kummer's Lemma </span> 
+						<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch"  >
+							theorem KummersLemma (u : (𝓞 K)ˣ)
+							(hcong : ∃ n : ℤ, (p : 𝓞 K) ∣ (u - n : 𝓞 K)) :
+							∃ v, u = v ^ (p : ℕ)
+					</code></pre>
+						- So we'd have $p \mid [L : K]$, but this is the class number and $p$ is regular!	
+						- So we must have $K(u^{1/p}) = K$ and so $u = v^p$ for some $v \in \mathcal{O}_K^\times$.
 					</textarea>	
 				</section>
 
-				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h4>Elliptic curves </h4>
-					<p>This is what Copilot thinks it should be</p>
-					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-5" >
-						/-- An elliptic curve over a field `K` is a non-singular cubic curve in
-						`projective_space` given by an equation `y^2 = x^3 + a * x + b` -/
-						class EllipticCurve (K : Type*) [Field K] where
-						(a b : K)
-						(discr_ne_zero : 4 * a^3 + 27 * b^2 ≠ 0)  
-					</code></pre>
+				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<textarea data-template>
+					- Unfortunately, we can't yet formalise this proof as we dont have CFT in mathlib.
+					---
+					- Unfortunately, we can't yet formalise this proof as we dont have CFT in mathlib. So can't use "Hilbert class field".
+					- Instead we went for a proof closer to Kummer's original proof, which uses Hilbert 90, 92 and 94!
+					---
+					### <span style="text-transform: none;">Hilbert 94 </span> 
+					- This is historically one of the first CFT results, it says: 
+					<div class="definition">
+						<strong>Hilbert 94</strong>: 
+						Let $L/K$ is be an unramified cyclic finite extension of number fields of odd prime degree, then there exists some non-principal ideal in $\mathcal{O}_K$ that becomes principal in $\mathcal{O}_L$ and 
+						thus $[L:K]$ divides the class number of $K$.
+					</div>	
+					---
+					### <span style="text-transform: none;">Hilbert 94 </span> 
+					- Which is Lean looks like:
+						<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-4|5-6|8-12|13" >
+							theorem exists_not_isPrincipal_and_isPrincipal_map (K L : Type*)
+								[Field K] [Field L] [NumberField K] [NumberField L] [Algebra K L]
+								[FiniteDimensional K L] [IsGalois K L] [IsUnramified (𝓞 K) (𝓞 L)] [h : IsCyclic (L ≃ₐ[K] L)]                
+								(hKL : Nat.Prime (finrank K L)) (hKL' : finrank K L ≠ 2) :
+								∃ I : Ideal (𝓞 K), ¬I.IsPrincipal ∧ 
+									(I.map (algebraMap (𝓞 K) (𝓞 L))).IsPrincipal := by...
+							
+							theorem dvd_card_classGroup_of_isUnramified_isCyclic (K L : Type*)
+								[Field K] [Field L] [NumberField K] [NumberField L] [Algebra K L]
+								[FiniteDimensional K L] [IsGalois K L] [IsUnramified (𝓞 K) (𝓞 L)] 
+								[IsCyclic (L ≃ₐ[K] L)] (hKL : Nat.Prime (finrank K L))
+								(hKL' : finrank K L ≠ 2) :
+								finrank K L ∣ Fintype.card (ClassGroup (𝓞 K)) := by ... 
+						</code></pre>
+					---
+					### <span style="text-transform: none;">Hilbert 94 </span> 
+					- Hilbert 94 and some ramification theory is enough to prove Kummer's Lemma.
+					---
+					### <span style="text-transform: none;">Hilbert 94+ implies Kummer </span> 
+					- Using this one can prove the following: 
+					- Let $u \in \mathcal{O}_K^\times$ and $n \in \Z$ such that $u \equiv n \bmod p$. 
+					- If $w \in \mathcal{O}_K^\times$ is a unit such that $(\zeta -1)^p \mid w-1$ then there exists some $v \in K$ such that $v^p=w$.
+					---
+					### <span style="text-transform: none;">Hilbert 94+ implies Kummer </span>
+					- If $w \in \mathcal{O}_K^\times$ is a unit such that $(\zeta -1)^p \mid w-1$ then there exists some $v \in K$ such that $v^p=w$.
+					- Idea is to show that if this claim didn't hold then:
+					<span class="fragment fade-out" data-fragment-index="1" style="display: inline;"> $K(w^{1/p})/K$ is unramified and cyclic of degree $p$.</span><span class="fragment fade-in" data-fragment-index="1" style="display: inline; color: #000000" > $p$ divides the class number of $K$, which we know can't happen. </span>
+
+					---
+					### <span style="text-transform: none;">Ramification </span> 
+					- This required us to develop a big chuck of ramification theory from scratch. Such as:
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" >
+						/-- The different ideal of an extension of integral domains `B/A` is the inverse of the dual of `A`
+						as an ideal of `B`. -/
+						def differentIdeal [NoZeroSMulDivisors A B] : Ideal B := -- 1/A*, where A* is the trace dual of A
+						(1 / Submodule.traceDual A (FractionRing A) 1 : Submodule B (FractionRing B)).comap
+							(Algebra.linearMap B (FractionRing B)) --this other stuff essentially makes it an ideal in B.
+						</code></pre>
+					---
+					### <span style="text-transform: none;">Ramification </span> 
+					- if you ramifiy then you divide the different ideal:
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" >
+						lemma pow_sub_one_dvd_differentIdeal 
+						[IsDedekindDomain A] [NoZeroSMulDivisors A B] [Module.Finite A B]
+						[Algebra.IsSeparable (FractionRing A) (FractionRing B)]
+						{p : Ideal A} [p.IsMaximal] (P : Ideal B) (e : ℕ) (hp : p ≠ ⊥)
+						(hP : P ^ e ∣ p.map (algebraMap A B)) : P ^ (e - 1) ∣ differentIdeal A B := by
+						</code></pre>
+					---
+					### <span style="text-transform: none;">Ramification </span> 
+					- If $K = F(\alpha)$ and min. pol. of $\alpha$ is separable modulo a prime ideal $\mathfrak{p}_F$, then  $\mathfrak{p}_F$ is unramified in $\mathcal{O}_K$.
+					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" >
+						lemma isUnramifiedAt_of_Separable_minpoly [Algebra.IsSeparable K L]
+						(p : Ideal R) [hp : p.IsPrime] (hpbot : p ≠ ⊥) (x : L) (hx : IsIntegral R x)
+						(hx' : Algebra.adjoin K {x} = ⊤)
+						(h : Polynomial.Separable ((minpoly R x).map (Ideal.Quotient.mk p))) :
+						IsUnramifiedAt S p := by
+						</code></pre>
+					</textarea>	
 				</section>
-				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h4>Elliptic curves </h4>
-					<p>This is basically what it is in mathlib</p>
-					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-3|5-9" >
-						structure EllipticCurve (R : Type u) [CommRing R] extends WeierstrassCurve R where
-							Δ' : Rˣ
-							coe_Δ' : Δ' = toWeierstrassCurve.Δ
+
+
+				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<textarea data-template>
+						### <span style="text-transform: none;">Proving Hilbert 94 </span> 
+						- We've reduced our problem to proving Hilbert 94. This is where we need Hilbert 92.
+						---
+						### <span style="text-transform: none;">Proving Hilbert 94 </span> 
+						- We've reduced our problem to proving Hilbert 94. This is where we need Hilbert 92.
+						- This is the most technical part of the proof.
+					</textarea>	
+				</section>
+
+				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<textarea data-template>
+						<div class="definition">
+							<strong>Hilbert 92</strong>: 
+							Let $K/k$ be a cyclic extension of number fields of odd prime degree and let $\sigma$ be a generator of the Galois group. 
+							Then there exists a unit $u \in \mathcal{O}_K^\times$ such that $\mathrm{Norm}_{K/k}(u)=1$ and for all $\varepsilon \in \mathcal{O}_K^\times$ we have $u \ne \varepsilon/\sigma(\varepsilon)$.
+						</div>	
+						---
+						- This is saying that for such a $K/k$, $$H^1(\mathrm{Gal}(K/k), \mathcal{O}_K^\times) \ne 0.$$
+						---
+						- There exists a unit $u \in \mathcal{O}_K^\times$ with norm $1$ such that $u \ne \varepsilon/\sigma(\varepsilon)$ for $\varepsilon \in \mathcal{O}_K^\times$.
+						- By Hilbert 90 we know $u = \beta / \sigma(\beta)$ for some $\beta$ (which now can't be a unit). The ideal $(\beta) \cap \mathcal{O}_k$ is then a non-pricipal ideal that becomes principal in $\mathcal{O}_K$.
+						---
+						- Proving Hilbert 92 is tricky. We didn't really have enough group cohomology to do this. But Swinnerton-Dyer says this wouldn't help much anyways.
+						- Idea is to construct a  <span style="text-transform: none; color: #000000">fundamental system of units</span>
+						---
+						### <span style="text-transform: none;">Fundamental system of units </span> 
+						- Let $r$ be $\mathrm{rk}_{\mathbb{Z}}(\mathcal{O}_k^\times)$. 
+						---
+						### <span style="text-transform: none;">Fundamental system of units </span> 
+						- Let $r$ be $\mathrm{rk}_{\mathbb{Z}}(\mathcal{O}_k^\times)$. 
+						- Let $U' = \mathcal{O}_K^\times / \mathcal{O}_k^\times$
+						---
+						### <span style="text-transform: none;">Fundamental system of units </span> 
+						- Let $r$ be $\mathrm{rk}_{\mathbb{Z}}(\mathcal{O}_k^\times)$, and $U' = \mathcal{O}_K^\times / \mathcal{O}_k^\times$
+						- Let $U  := U'/U'_{tors}$
+						---
+						### <span style="text-transform: none;">Fundamental system of units </span> 
+						- Let $r$ be $\mathrm{rk}_{\mathbb{Z}}(\mathcal{O}_k^\times)$,  $U' = \mathcal{O}_K^\times / \mathcal{O}_k^\times$.
+						- Let $U  := U'/U'_{tors}$
+						- A <span style="text-transform: none; color: #000000">fundamental system of units</span>  is a choice of $r+1$ elements $\{h_i\}$ of $U$ such that
+						$$U / \langle h_i\rangle_{\mathbb{Z}[Gal(K/k)]}$$
+						is finite with minimal index.
+						---
+						- The key thing is that if you have such a set of units you get: if $a_0,\dots,a_{s-1}$ be integers not all divisible by $p$ and $\{h_i\}$ a fundamental system units, then
+						$$
+						\prod_{i=0}^{r} h_i^{a_i} \neq u/\sigma(u)
+						$$
+						for any $u \in U$.
+						---
+						- So the problem reduces to showing such a system of units exits (which is Hilbert 91).
+						---
+						- So the problem reduces to showing such a system of units exits (which is Hilbert 91).
+						- Its just a lot of of playing with units and norms. Which is doable in mathlib.
+						---
+						<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-3|5-7|9-10|12-14|16-17|19-22|23-25" >
+							structure systemOfUnits (G : Type*) [AddCommGroup G] (s : ℕ) where
+								units : Fin s → G  --A choice of s elements of G
+								linearIndependent : LinearIndependent A units
+
+							abbrev systemOfUnits.IsMaximal {s : ℕ} {p : ℕ+} {G : Type*} [AddCommGroup G]
+								[Module A G] (sys : systemOfUnits (G := G) p s) :=
+								Fintype (G ⧸ Submodule.span A (Set.range sys.units))	
+							
+							def systemOfUnits.IsFundamental [Module A G] (h : systemOfUnits p G s) :=
+								∃ _ : h.IsMaximal, ∀ (S : systemOfUnits p G s) (_ : S.IsMaximal), h.index ≤ S.index	
+
+							lemma corollary [Module A G] (S : systemOfUnits p G s) (hs : S.IsFundamental)
+								(a : Fin s → ℤ) (ha : ∃ i , ¬ (p : ℤ) ∣ a i) : --note the additive notation.
+								∀ g : G, (1 - zeta p) • g ≠ ∑ i, a i • S.units i := by ... -- the action of zeta p coincides with sigma	
+							
+							lemma Hilbert91 :
+								∃ S : systemOfUnits p G (NumberField.Units.rank k + 1), S.IsFundamental := by ...	
+							
+							lemma Hilbert92 [Algebra k K] [IsGalois k K] [NumberField k] [NumberField K]
+								(hKL : Nat.Prime (finrank k K)) (hpodd : finrank k K ≠ 2)
+								(σ : K ≃ₐ[k] K) (hσ : ∀ x, x ∈ Subgroup.zpowers σ) :
+								∃ η : (𝓞 K)ˣ, Algebra.norm k (η : K) = 1 ∧ ∀ ε : (𝓞 K)ˣ, (η : K) ≠ ε / (σ ε : K) :=
+							  haveI := IsUnramifiedAtInfinitePlaces_of_odd_finrank (hKL.odd_of_ne_two hpodd)
+							  letI : IsCyclic (K ≃ₐ[k] K) := ⟨σ, hσ⟩
+							  almostHilbert92 ⟨finrank k K, finrank_pos⟩ hKL rfl σ hσ hpodd	
+							</code></pre>
+					</textarea>	
+				</section>
+
+			
+				<section  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<div class="mermaid">
+						graph TD;
+							A["ℤ&#91;&#950;<sub>p</sub>&#93;- Modules"] --> B["<b>Hilbert 91</b>"];
+							B --> C["<b>Hilbert 92</b>"];
+							C --> D["<b>Hilbert 94</b>"];
+							D --> E["<b>Kummer's Lemma</b>"];
+							F["<b>Ramification of infinite places</b>"] --> C;
+							G["<b>Different Ideal & Ramification</b>"] --> E;
+							H["<b>Unramified Extensions</b>"] --> D;
+							I["<b>Kummer Extensions</b>"] --> E;
+							E --> J["<b>FLT for regular primes</b>"];
+					</div>
+				</section>
+
+				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+					<textarea data-template>
+						### <span style="text-transform: none;">Regular primes </span> 
+						- We've shown FLT for regular primes!
+						---
+						### <span style="text-transform: none;">Regular primes </span> 
+						- We've shown FLT for regular primes!
+						- Ok, what primes does Lean know are regular?
+						---
+						### <span style="text-transform: none;">Regular primes </span> 
+						- We've shown FLT for regular primes!
+						- Ok, what primes does Lean know are regular?
+						- $p=2,3,5$ are the only ones we have!
+						---
+						### <span style="text-transform: none;">Future work </span> 
+						- Use the Bernoulli description of regular primes to show lots more primes are regular.
 						
-						--where Δ is then some horrible expression in terms of the coefficients of the curve
-						/-- A Weierstrass curve $Y^2 + a_1XY + a_3Y = X^3 + a_2X^2 + a_4X + a_6$ with parameters $a_i$. -/
-							@[ext]
-							structure WeierstrassCurve (R : Type u) where
-							  (a₁ a₂ a₃ a₄ a₆ : R) 
-					</code></pre>
+
+						---
+						### <span style="text-transform: none;">Future work </span> 
+						- Use the Bernoulli description of regular primes to show lots more primes are regular.
+						- Recall this says: An odd prime $p$ is <span style="text-transform: none; color: #000000">regular</span> if and only if $p$ does not divide the denominator of the <span style="text-transform: none; color: #000000">Bernoulli number</span> $B_n$ for $n = 2, 4, \ldots, p - 3$.
+						---
+						### <span style="text-transform: none;">Future work </span> 
+						- Use the Bernoulli description of regular primes to show lots more primes are regular.
+						- Recall this says: An odd prime $p$ is <span style="text-transform: none; color: #000000">regular</span> if and only if $p$ does not divide the denominator of the <span style="text-transform: none; color: #000000">Bernoulli number</span> $B_n$ for $n = 2, 4, \ldots, p - 3$.
+						- This requires things like the analytic class number formula, which Xavier Roblot is working on.
+						---
+						
+					</textarea>	
 				</section>
 
-				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h4>Elliptic curves </h4>
-					<p>We know non-trivial things about elliptic curves in mathlib, such as:</p>
-					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-5" >
-						variables  (E : EllipticCurve (GaloisField 2 10))
-						-- GaloisField 2 10 is the finite field with 2^10 elements.
-
-						example (P Q R : E.toAffine.Point) : P + (Q + R) = (P + Q) + R := by 
-							exact (WeierstrassCurve.Affine.Point.add_assoc P Q R).symm
-					</code></pre>
-				</section>
-
-				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h4>Modular forms </h4>
-					<p>These are holomorphic functions \(f : \mathbb{H} \to \mathbb{C}, \) with some bounded coundition at infinity such that for some fixed \(k \in \mathbb{Z}\) and \(\Gamma \subseteq \mathrm{SL}_2(\mathbb{Z}) \) we have \[f \left(\frac{az+b}{cz+d} \right) = (cz+d)^k f(z)  \]	
-					for all \( \left ( \begin{smallmatrix} a & b \\ c & d \end{smallmatrix} \right)  \in \Gamma \) and \(z \in \mathbb{H}\). </p>
-
-					
-				</section>
-				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h4>Modular forms </h4>
-					<p>Here it is in mathlib</p>
-					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-3|5-8" >
-						structure ModularForm extends SlashInvariantForm Γ k where
-							holo' : MDifferentiable 𝓘(ℂ) 𝓘(ℂ) (toSlashInvariantForm : ℍ → ℂ)
-							bdd_at_infty' : ∀ A : SL(2, ℤ), IsBoundedAtImInfty (toSlashInvariantForm ∣[k] A)
-
-						structure SlashInvariantForm where
-							toFun : ℍ → ℂ
-							slash_action_eq' : ∀ γ : Γ, toFun ∣[k] γ = toFun
-					</code></pre>
-				</section>
-				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h4>Matrices </h4>
-					<p>This is a good excuse to tell you about matrices!</p>
-					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1,3|5,7-8|10" >					
-						local notation "M(" n ", " R ")" => Matrix (Fin n) (Fin n) R
-
-						local notation "SL(" n ", " R ")" => Matrix.SpecialLinearGroup (Fin n) R
-
-						def M_abcd (a b c d : R) : M(2, R) := !![a, b; c, d]
-
-						lemma M_det {R : Type*} [CommRing R]  (a b c d : R) : (M_abcd a b c d).det = a * d - b * c := by 
-  							exact Matrix.det_fin_two (M_abcd a b c d)
-
-						def S : SL(2, ℤ) := ⟨(M_abcd 0 (-1 : ℤ) 1 0),  by rfl⟩ 	
-					</code></pre>
-				
-				</section>
-
-				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h4>Modularity </h4>
-					<p>We do have enough to state a version on the modularity conjecture, but we are still far from proving it.</p>
-					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-5" >
-						def ModularityConjecture (E : EllipticCurve ℚ) : Prop :=
-							∃ (N : ℕ+) (f : CuspForm (Gamma0 N) 2), IsNormalisedEigenform f ∧ 
-								∀ (p : ℕ), p.Prime → (N : ZMod p) ≠ 0 → a_[p]f = E.ap p
-						/- Here `a_[p]f` is the p-th Fourier coefficient of f and 
-							E.ap p related to the number of points on the elliptic curve over a finite field-/
-					</code></pre>
-				</section>
-
-				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h4>Modularity </h4>
-					<p>Be careful stating your theorems!</p>
-					<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" data-line-numbers="1-5" >
-						def ModularityConjecture (E : EllipticCurve ℚ) : Prop :=
-							∃ (N : ℕ) (f : CuspForm (Gamma0 N) 2), IsNormalisedEigenform f ∧ 
-								∀ (p : ℕ), p.Prime → (N : ZMod p) ≠ 0 → a_[p]f = E.ap p
-						/- this one just says, does there exist a normalised eigenform of any level!-/
-					</code></pre>
-				</section>
-
-				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
-					<h4>Algebra and Number theory in mathlib</h4>
-					<p>Going back to our original goal, we see that:</p>
-					<ul>
-						<li>We can do lots of basic algebra and number theory.</li>
-						<li>We have some more advanced things in mathlib, like elliptic curves and modular forms.</li>
-					</ul>
-				</section>	
 				<section data-auto-animate  data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<h4>Algebra and Number theory in mathlib</h4>
 					<p>I really have missed out lots of things, for example:</p>
@@ -533,8 +712,10 @@
 						<li>Category theory</li>
 						<li>Homological algebra</li>
 						<li>Lie Algebras</li>
+						<li>Modular forms</li>	
+						<li>Elliptic curves</li>
 						<li>Condensed maths</li>
-						<li>Riemann zeta function, \(L\)-series</li>
+						<li>Riemann zeta function, $L$-series</li>
 						<li>Quadratic reciprocity, Bernoulli numbers, Pell's equation</li>
 					</ul>
 				</section>	
@@ -593,7 +774,8 @@
 				plugins: [ RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight, RevealMath.KaTeX ]
 			});
 
-		</script>
 
+		</script>
+		
 	</body>
 </html>
