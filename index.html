@@ -22,7 +22,7 @@
 		<link rel="stylesheet" href="plugin/highlight/monokai.css">
 		<style>
 		pre code {
-		    font-size: 0.6em; /* Change 80% to whatever width you prefer */
+		    font-size: 0.7em; /* Change 80% to whatever width you prefer */
 		}
 		</style>
 		 <script type="module">
@@ -120,11 +120,10 @@
 		<div class="reveal" >
 
 			<!-- Any section element inside of this container is displayed as a slide -->
-			 <div class="slides" >
+			<div class="slides">
 				<section data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<h2>
 						<span style="text-transform: none;">The regular case of Fermat's Last Theorem in</span>
-		
 						<span style="text-transform: none; color: #000000">Lean</span>
 					</h2>
 					<p>
@@ -133,10 +132,16 @@
 					<p>
 						<small>University of East Anglia</small>
 					</p>
-					<small>slides: <a style="color: #000000;" href="https://cbirkbeck.github.io/ETH_FLT/">
-						cbirkbeck.github.io/ETH_FLT/</a></small>
-						<small style="display: block;  text-align: center; opacity: 0.5">2024-10-18</small>
+					<small>
+						slides: <a style="color: #000000;" href="https://cbirkbeck.github.io/ETH_FLT/">
+						cbirkbeck.github.io/ETH_FLT/</a>
+					</small>
+					<div style="text-align: center;">
+						<img src="QR.png" alt="QR Code" style="width: 100px; height: 100px;">
+					</div>
+					<small style="display: block; text-align: center; opacity: 0.5">2024-10-18</small>
 				</section>
+			
 
 				<section data-markdown data-auto-animate data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
 					<textarea data-template>
@@ -161,12 +166,12 @@
 						### <span style="text-transform: none;">Why do this?</span>
 						- Its fun!
 						- It's nice to be able to verify proofs.
-						- We are seeing interesting developments in the field, such as <span style="text-transform: none; color: #000000">AlphaProof</span> "winning" a silvere medal at this year's IMO.
+						- We are seeing interesting developments in the field, such as <span style="text-transform: none; color: #000000">AlphaProof</span> "winning" a silver medal at this year's IMO.
 						---
 						### <span style="text-transform: none;">Why do this?</span>
 						- Its fun!
 						- It's nice to be able to verify proofs.
-						- We are seeing interesting developments in the field, such as <span style="text-transform: none; color: #000000">AlphaProof</span>  "winning" a silvere medal at this year's IMO.
+						- We are seeing interesting developments in the field, such as <span style="text-transform: none; color: #000000">AlphaProof</span>  "winning" a silver medal at this year's IMO.
 						- Growing interest from mathematicians. For example, <span style="text-transform: none; color: #000000"> Scholze</span> and  <span style="text-transform: none; color: #000000">Tao</span>.
 						---
 						### <span style="text-transform: none;">Current state of Lean/mathlib</span>
@@ -282,8 +287,8 @@
 						adjoin_roots : ∀ x : B, x ∈ adjoin A {b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1}
 					</code></pre>
 					<ul>
-						<li>We chose to work with <span style="text-transform: none; color: #000000">positive</span>  natural numbers since we didn't want to have to exclude the $0$-th cyclitomic extention all over the place.</li>
-						<li>This was at the cost of later having lots of extra coercions.</li>
+						<li>Using this class is like proving things for abstract cyclotomic extensions, not a fixed choice of 'model'.</li>
+						<li>Enables nice automation.</li>
 					</ul>
 				</section>
 
@@ -297,8 +302,8 @@
 						adjoin_roots : ∀ x : B, x ∈ adjoin A {b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1}
 					</code></pre>
 					<ul>
-						<li>Using this class is like proving things for abstract cyclotomic extensions, not a fixed choice of 'model'.</li>
-						<li>Enables nice automation, such as Lean automatically figuring out its a field or algebra, etc.</li>
+						<li>We chose to work with <span style="text-transform: none; color: #000000">positive</span>  natural numbers since we didn't want to have to exclude the $0$-th cyclitomic extention all over the place.</li>
+						<li>This was at the cost of later having lots of extra coercions.</li>
 					</ul>
 				</section>
 				
@@ -314,7 +319,7 @@
 							n.Coprime <| Fintype.card <| ClassGroup (𝓞 <| CyclotomicField ⟨n, hn.out⟩ ℚ)
 
 						/-- The definition of regular primes. -/
-						def IsRegularPrime : Prop :=
+						def IsRegularPrime (p : ℕ) [hp : Fact p.Prime] : Prop :=
 							IsRegularNumber p
 
 						/-- Fermat's last theorem for regular primes. -/
@@ -366,8 +371,8 @@
 						---
 						### <span style="text-transform: none;">Case I </span> 
 						**Proof Idea**:
+						- Deal with lots of lemmas about units and ideals.
 						- Use the class number condition to get a contradiction.
-						- Profit!
 					</textarea>	
 				</section>	
 
@@ -388,15 +393,15 @@
 						### <span style="text-transform: none;">This required:</span> 
 						- Specific results about units in these cyclotomic fields.  <span style="text-transform: none; color: #000000"> For example</span>, that for $p \ne 2$ a prime, every unit $u \in \Z[\zeta_p]^\times$ can be written as $u=x \zeta_p^n$ for some $n \in \Z$ and $x \in \Z[\zeta_p]^\times$ such that $x \in \mathbb{R}$.
 						---
-						### <span style="text-transform: none;">This required: </span> 
-						- The proof of <span style="text-transform: none; color: #000000">FLT </span> for $n=3$ which was done independently by one of us (RVdV).
-						- Its separate since at some point in the proof you need to check that four $p$-th roots of unity are distinct. Its also separate in full FLT proof.
-						---
 						### <span style="text-transform: none;">This required </span> 
 						- Dealing with lots of coercions issues. For example, for $R$ a ring and $K$ is field of fractions, we tend to think of $u \in R^\times$ as an element of $R^\times, R$ and $F$ all at once.
 						- In Lean we need to explicitly say things like:
 						<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch" >
 						lemma coe_coe_inv (u : Rˣ) : ((u : R) : K)⁻¹ = (((u⁻¹ : Rˣ) : R) : K)
+						---
+						### <span style="text-transform: none;">This required: </span> 
+						- The proof of <span style="text-transform: none; color: #000000">FLT </span> for $n=3$ which was done independently by one of us (RVdV).
+						- Its separate since at some point in the proof you need to check that four $p$-th roots of unity are distinct. Its also separate in full FLT proof.
 						</code></pre>
 					</textarea>	
 				</section>
@@ -446,8 +451,8 @@
 					<textarea data-template>
 						### <span style="text-transform: none;">Modern proof of Kummer's Lemma </span> 
 						<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch"  >
-								theorem Kummer (u : (𝓞 K)ˣ) (hcong : ∃ n : ℤ, (p : 𝓞 K) ∣ (u - n : 𝓞 K)) :
-									∃ v, u = v ^ (p : ℕ)
+							theorem Kummer (u : (𝓞 K)ˣ) (hcong : ∃ n : ℤ, (p : 𝓞 K) ∣ (u - n : 𝓞 K)) :
+								∃ v, u = v ^ (p : ℕ)
 						</code></pre>
 						- Note  $K(u^{1/p})/K$ is a Kummer, hence abelian, extension. 
 					</textarea>	
@@ -457,9 +462,8 @@
 					<textarea data-template>
 						### <span style="text-transform: none;">Modern proof of Kummer's Lemma </span> 
 						<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch"  >
-							theorem KummersLemma (u : (𝓞 K)ˣ)
-							(hcong : ∃ n : ℤ, (p : 𝓞 K) ∣ (u - n : 𝓞 K)) :
-							∃ v, u = v ^ (p : ℕ)
+							theorem Kummer (u : (𝓞 K)ˣ) (hcong : ∃ n : ℤ, (p : 𝓞 K) ∣ (u - n : 𝓞 K)) :
+								∃ v, u = v ^ (p : ℕ)
 					</code></pre>
 
 						- Note $K(u^{1/p})/K$ is a Kummer, hence abelian, extension. If its degree was $p$, then:
@@ -470,9 +474,8 @@
 					<textarea data-template>
 						### <span style="text-transform: none;">Modern proof of Kummer's Lemma </span> 
 						<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch"  >
-							theorem KummersLemma (u : (𝓞 K)ˣ)
-							(hcong : ∃ n : ℤ, (p : 𝓞 K) ∣ (u - n : 𝓞 K)) :
-							∃ v, u = v ^ (p : ℕ)
+							theorem Kummer (u : (𝓞 K)ˣ) (hcong : ∃ n : ℤ, (p : 𝓞 K) ∣ (u - n : 𝓞 K)) :
+								∃ v, u = v ^ (p : ℕ)
 					</code></pre>
 						- Show $K(u^{1/p})/K$ is everywhere unramified, so contained in the Hilbert class field of $K$, call it $L$.	
 						- So we'd have $p \mid [L : K]$, but this is the class number and $p$ is regular!
@@ -482,9 +485,8 @@
 					<textarea data-template>
 						### <span style="text-transform: none;">Modern proof of Kummer's Lemma </span> 
 						<pre data-id="code-animation"><code data-trim  data-noescape="" class="language-lean hljs" class="stretch"  >
-							theorem KummersLemma (u : (𝓞 K)ˣ)
-							(hcong : ∃ n : ℤ, (p : 𝓞 K) ∣ (u - n : 𝓞 K)) :
-							∃ v, u = v ^ (p : ℕ)
+							theorem Kummer (u : (𝓞 K)ˣ)(hcong : ∃ n : ℤ, (p : 𝓞 K) ∣ (u - n : 𝓞 K)) :
+								∃ v, u = v ^ (p : ℕ)
 					</code></pre>
 						- So we'd have $p \mid [L : K]$, but this is the class number and $p$ is regular!	
 						- So we must have $K(u^{1/p}) = K$ and so $u = v^p$ for some $v \in \mathcal{O}_K^\times$.
